@@ -1,7 +1,7 @@
-import 'package:apk_renamer/data/repository/apk_info.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/model/file_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 
 class ApkListPage extends StatefulWidget {
@@ -50,6 +50,14 @@ class _ApkListPageState extends State<ApkListPage> {
                     },
                     child: const Text('Open'),
                   ),
+                  FilledButton(
+                    onPressed: () {
+                      _bloc.add(ApkInfoEvent.updateFilesInfo(
+                        replacePattern: _replacePatternController.text,
+                      ));
+                    },
+                    child: const Text('Test'),
+                  ),
                 ],
               ),
             ),
@@ -60,7 +68,7 @@ class _ApkListPageState extends State<ApkListPage> {
             child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
               bloc: _bloc,
               builder: (context, state) {
-                List<ApkInfo>? listInfo;
+                List<FileInfo>? listInfo;
                 state.whenOrNull(
                   load: (st) {
                     listInfo = st;
@@ -88,17 +96,17 @@ class _ApkListPageState extends State<ApkListPage> {
     );
   }
 
-  List<TableRow> _rows(List<ApkInfo>? listInfo) {
+  List<TableRow> _rows(List<FileInfo>? listInfo) {
     final rowList = <TableRow>[];
-    rowList.add(TableRow(
-      decoration: const BoxDecoration(
+    rowList.add(const TableRow(
+      decoration: BoxDecoration(
       ),
       children: <Widget>[
         SizedBox(),
         TableCell(
           child: Text("Исходное"),
         ),
-        const TableCell(
+        TableCell(
           child: Text("Переименовано",),
         ),
       ],
@@ -109,16 +117,18 @@ class _ApkListPageState extends State<ApkListPage> {
         ),
         children: <Widget>[
           const TableCell(
-            child: Checkbox(
-              checked: true,
-              onChanged: null,
+            child: Center(
+              child: Checkbox(
+                checked: true,
+                onChanged: null,
+              ),
             ),
           ),
           TableCell(
-            child: Text(e.file.toString()),
+            child: Text(e.currentFileName??''),
           ),
-          const TableCell(
-            child: Text('hghghh'),
+          TableCell(
+            child: Text(e.newFileName??''),
           ),
         ],
       ));

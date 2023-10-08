@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 
 import '../../logger.dart';
-import 'apk_info.dart';
+import '../model/apk_info.dart';
 
 class ParserApkInfo {
   String? _aaptPath;

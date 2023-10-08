@@ -1,10 +1,13 @@
 part of 'apk_info_bloc.dart';
 
-@Freezed(equal: false)
+@Freezed(
+    equal: false,
+    makeCollectionsUnmodifiable: false
+)
 class ApkInfoState with _$ApkInfoState {
   const factory ApkInfoState.init() = ApkInfoInitial;
 
   const factory ApkInfoState.load({
-    List<ApkInfo>? listInfo,
+    List<FileInfo>? listInfo,
   }) = ApkInfoLoad;
 }
