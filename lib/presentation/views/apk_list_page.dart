@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/model/file_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
+import 'custom/apk_table.dart';
 
 class ApkListPage extends StatefulWidget {
   const ApkListPage({
@@ -68,25 +68,15 @@ class _ApkListPageState extends State<ApkListPage> {
             child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
               bloc: _bloc,
               builder: (context, state) {
-                List<FileInfo>? listInfo;
-                state.whenOrNull(
-                  load: (st) {
-                    listInfo = st;
-                  },
-                );
-                // final item = listInfo![index];
-                // "",
-                // "Исходное",
-                // "Переименовано",
-                return Table(
-                  // border: TableBorder.all(),
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(64),
-                    1: FlexColumnWidth(),
-                    2: FlexColumnWidth(),
-                  },
-                  children: _rows(listInfo),
+                return state.maybeWhen(
+                  load: (listInfo) => ApkTable(
+                      key: const Key('apk_table'),
+                      listInfo: listInfo,
+                    ),
+                  showProgress: () => const Center(child: ProgressRing()),
+                  orElse: () => const ApkTable(
+                    key: Key('apk_table'),
+                  ),
                 );
               },
             ),
@@ -94,45 +84,5 @@ class _ApkListPageState extends State<ApkListPage> {
         ],
       ),
     );
-  }
-
-  List<TableRow> _rows(List<FileInfo>? listInfo) {
-    final rowList = <TableRow>[];
-    rowList.add(const TableRow(
-      decoration: BoxDecoration(
-      ),
-      children: <Widget>[
-        SizedBox(),
-        TableCell(
-          child: Text("Исходное"),
-        ),
-        TableCell(
-          child: Text("Переименовано",),
-        ),
-      ],
-    ));
-    listInfo?.forEach((e) {
-      rowList.add(TableRow(
-        decoration: const BoxDecoration(
-        ),
-        children: <Widget>[
-          const TableCell(
-            child: Center(
-              child: Checkbox(
-                checked: true,
-                onChanged: null,
-              ),
-            ),
-          ),
-          TableCell(
-            child: Text(e.currentFileName??''),
-          ),
-          TableCell(
-            child: Text(e.newFileName??''),
-          ),
-        ],
-      ));
-    });
-    return rowList;
   }
 }

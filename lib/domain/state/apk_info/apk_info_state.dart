@@ -11,4 +11,7 @@ class ApkInfoState with _$ApkInfoState {
     List<FileInfo>? listInfo,
   }) = ApkInfoLoad;
 
+  const factory ApkInfoState.showProgress() = AuthStateShowProgress;
+  const factory ApkInfoState.hideProgress() = AuthStateHideProgress;
+
 }

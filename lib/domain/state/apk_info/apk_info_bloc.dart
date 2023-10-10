@@ -63,6 +63,7 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
       UpdateFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
     final pattern = event.replacePattern;
     logger.d('UpdateFilesInfoEvent pattern >> $pattern');
+    emit.call(const ApkInfoState.showProgress());
     final list = _listInfo??[];
     if (list.isNotEmpty) {
       _listInfo = await _renameIsolate.createNewName(pattern, list);
