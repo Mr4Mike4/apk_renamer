@@ -10,4 +10,5 @@ class ApkInfoState with _$ApkInfoState {
   const factory ApkInfoState.load({
     List<FileInfo>? listInfo,
   }) = ApkInfoLoad;
+
 }

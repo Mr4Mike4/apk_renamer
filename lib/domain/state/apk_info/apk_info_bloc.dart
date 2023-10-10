@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:apk_renamer/data/repository/parser_apk_info.dart';
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../data/repository/parser_replace_pattern.dart';
-import '../../../data/repository/renamer_files.dart';
+import '../../../data/rename_isolate/rename_isolate.dart';
 import '../../../logger.dart';
 import '../../model/file_info.dart';
 
@@ -18,15 +16,21 @@ part 'apk_info_event.dart';
 part 'apk_info_state.dart';
 
 class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
+
   ApkInfoBloc() : super(const ApkInfoState.init()) {
+    on<InitApkInfoEvent>(_onInitApkInfoEvent);
     on<OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
     on<UpdateFilesInfoEvent>(_onUpdateFilesInfoEvent);
+    add(const ApkInfoEvent.init());
   }
 
-  final ParserApkInfo _parserApkInfo = ParserApkInfo();
-  final ParserReplacePattern _parserPattern = ParserReplacePattern();
-
   List<FileInfo>? _listInfo;
+  
+  final _renameIsolate = RenameIsolate();
+
+  FutureOr<void> _onInitApkInfoEvent(InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
+    await _renameIsolate.init();
+  }
 
   FutureOr<void> _onOpenFilesApkInfoEvent(
       OpenFilesApkInfoEvent event, Emitter<ApkInfoState> emit) async {
@@ -59,22 +63,9 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
       UpdateFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
     final pattern = event.replacePattern;
     logger.d('UpdateFilesInfoEvent pattern >> $pattern');
-    _parserApkInfo.aaptInit();
     final list = _listInfo??[];
     if (list.isNotEmpty) {
-      final patternInfo = await _parserPattern.parsePattern(pattern);
-      final renamer = RenamerFiles(
-          pattern: pattern,
-          patternInfo: patternInfo,
-      );
-      for(int i = 0; i <list.length; i++) {
-        final info = list[i];
-        final apkInfo = await _parserApkInfo.parseFile(info.file);
-        final newFileName = await renamer.createNewName(apkInfo);
-        list[i] = info.copyWith(
-          newFileName: newFileName,
-        );
-      }
+      _listInfo = await _renameIsolate.createNewName(pattern, list);
     }
     emit.call(ApkInfoState.load(
       listInfo: _listInfo,

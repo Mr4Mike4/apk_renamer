@@ -9,7 +9,7 @@ void main() {
   });
   test('parsePattern test', () async {
 
-    final list = await parserPattern.parsePattern(r"csa-${apk.version}(${apk.version code})-${YMD}");
+    final list = await parserPattern.parsePattern(r"csa-${apk.versionName}(${apk.versionCode})-${Y}${M}${D}");
 
     for (final m in list) {
       print(m);
