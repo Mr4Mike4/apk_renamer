@@ -10,5 +10,6 @@
   "btn_preview": "Предпросмотр",
 
   "table_column_name": "Исходное имя",
-  "table_column_new_name": "Новое имя"
+  "table_column_new_name": "Новое имя",
+  "file_name_mask": "Маска для имени файла"
 }

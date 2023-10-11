@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 import '../../localizations.dart';
 import 'custom/apk_table.dart';
+import 'custom/input_text_field.dart';
 
 class ApkListPage extends StatefulWidget {
   const ApkListPage({
@@ -40,25 +41,35 @@ class _ApkListPageState extends State<ApkListPage> {
           Flexible(
             fit: FlexFit.tight,
             child: SizedBox(
-              width: 300,
+              width: 400,
               child: Column(
                 children: [
-                  TextBox(
-                    controller: _replacePatternController,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InputTextField(
+                      labelText: S.file_name_mask,
+                      controller: _replacePatternController,
+                    ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      _bloc.add(const ApkInfoEvent.openFiles());
-                    },
-                    child: Text(S.btn_add_files),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FilledButton(
+                      onPressed: () {
+                        _bloc.add(const ApkInfoEvent.openFiles());
+                      },
+                      child: Text(S.btn_add_files),
+                    ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      _bloc.add(ApkInfoEvent.updateFilesInfo(
-                        replacePattern: _replacePatternController.text,
-                      ));
-                    },
-                    child: Text(S.btn_preview),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FilledButton(
+                      onPressed: () {
+                        _bloc.add(ApkInfoEvent.updateFilesInfo(
+                          replacePattern: _replacePatternController.text,
+                        ));
+                      },
+                      child: Text(S.btn_preview),
+                    ),
                   ),
                 ],
               ),
@@ -67,20 +78,23 @@ class _ApkListPageState extends State<ApkListPage> {
           Flexible(
             fit: FlexFit.loose,
             flex: 3,
-            child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
-              bloc: _bloc,
-              builder: (context, state) {
-                return state.maybeWhen(
-                  load: (listInfo) => ApkTable(
-                      key: const Key('apk_table'),
-                      listInfo: listInfo,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
+                bloc: _bloc,
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    load: (listInfo) => ApkTable(
+                        key: const Key('apk_table'),
+                        listInfo: listInfo,
+                      ),
+                    showProgress: () => const Center(child: ProgressRing()),
+                    orElse: () => const ApkTable(
+                      key: Key('apk_table'),
                     ),
-                  showProgress: () => const Center(child: ProgressRing()),
-                  orElse: () => const ApkTable(
-                    key: Key('apk_table'),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ],
