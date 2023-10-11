@@ -4,6 +4,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../localizations.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
     super.key,
@@ -44,15 +46,16 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
         setState(() {});
       }
     }
+    final S = AppLocal.of(context);
     return NavigationView(
       key: viewKey,
       appBar: NavigationAppBar(
         automaticallyImplyLeading: false,
         title: () {
-          return const DragToMoveArea(
+          return DragToMoveArea(
             child: Align(
               alignment: AlignmentDirectional.centerStart,
-              child: Text('Win UI for Flutter'),
+              child: Text(S.app_title),
             ),
           );
         }(),

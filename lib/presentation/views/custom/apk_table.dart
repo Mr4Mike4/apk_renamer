@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../../domain/model/file_info.dart';
+import '../../../localizations.dart';
 
 class ApkTable extends StatelessWidget {
   const ApkTable({super.key, this.listInfo});
@@ -10,7 +11,7 @@ class ApkTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final FluentThemeData theme = FluentTheme.of(context);
-
+    final S = AppLocal.of(context);
     return Table(
       // border: TableBorder.all(),
       defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -19,23 +20,21 @@ class ApkTable extends StatelessWidget {
         1: FlexColumnWidth(),
         2: FlexColumnWidth(),
       },
-      children: _rows(),
+      children: _rows(S),
     );
   }
 
-  List<TableRow> _rows() {
+  List<TableRow> _rows(AppLocalizations S) {
     final rowList = <TableRow>[];
-    rowList.add(const TableRow(
-      decoration: BoxDecoration(),
+    rowList.add(TableRow(
+      // decoration: BoxDecoration(),
       children: <Widget>[
-        SizedBox(),
+        const SizedBox(),
         TableCell(
-          child: Text("Исходное"),
+          child: Text(S.table_column_name),
         ),
         TableCell(
-          child: Text(
-            "Переименовано",
-          ),
+          child: Text(S.table_column_new_name),
         ),
       ],
     ));

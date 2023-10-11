@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:system_theme/system_theme.dart';
 
+import '../localizations.dart';
 import '../presentation/views/home_page.dart';
 
 class MyApp extends StatelessWidget {
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       routeInformationProvider: router.routeInformationProvider,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('ru'),
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.ltr,

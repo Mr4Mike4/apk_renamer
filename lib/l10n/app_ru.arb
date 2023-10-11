@@ -1,0 +1,14 @@
+{
+  "@@locale": "ru",
+  "app_title": "ApkRenamer",
+  "app_name": "ApkRenamer",
+  "@app_name": {
+    "description": "название приложения"
+  },
+
+  "btn_add_files": "Добавить файлы",
+  "btn_preview": "Предпросмотр",
+
+  "table_column_name": "Исходное имя",
+  "table_column_new_name": "Новое имя"
+}

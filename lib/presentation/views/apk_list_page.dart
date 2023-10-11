@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/state/apk_info/apk_info_bloc.dart';
+import '../../localizations.dart';
 import 'custom/apk_table.dart';
 
 class ApkListPage extends StatefulWidget {
@@ -28,6 +29,7 @@ class _ApkListPageState extends State<ApkListPage> {
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
+    final S = AppLocal.of(context);
     return ScaffoldPage(
       // header: const PageHeader(
       //   title: Text('Fluent UI for Flutter Showcase App'),
@@ -48,7 +50,7 @@ class _ApkListPageState extends State<ApkListPage> {
                     onPressed: () {
                       _bloc.add(const ApkInfoEvent.openFiles());
                     },
-                    child: const Text('Open'),
+                    child: Text(S.btn_add_files),
                   ),
                   FilledButton(
                     onPressed: () {
@@ -56,7 +58,7 @@ class _ApkListPageState extends State<ApkListPage> {
                         replacePattern: _replacePatternController.text,
                       ));
                     },
-                    child: const Text('Test'),
+                    child: Text(S.btn_preview),
                   ),
                 ],
               ),
