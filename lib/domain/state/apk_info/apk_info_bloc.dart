@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
@@ -7,16 +6,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart' as p;
 
+import '../../../data/model/file_info.dart';
 import '../../../data/rename_isolate/rename_isolate.dart';
 import '../../../logger.dart';
-import '../../model/file_info.dart';
 
 part 'apk_info_bloc.freezed.dart';
 part 'apk_info_event.dart';
 part 'apk_info_state.dart';
 
 class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
-
   ApkInfoBloc() : super(const ApkInfoState.init()) {
     on<InitApkInfoEvent>(_onInitApkInfoEvent);
     on<OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
@@ -24,11 +22,12 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     add(const ApkInfoEvent.init());
   }
 
-  List<FileInfo>? _listInfo;
-  
+  List<FileInfo> _listInfo = [];
+
   final _renameIsolate = RenameIsolate();
 
-  FutureOr<void> _onInitApkInfoEvent(InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
+  FutureOr<void> _onInitApkInfoEvent(
+      InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
     await _renameIsolate.init();
   }
 
@@ -41,15 +40,20 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
       allowMultiple: true,
       lockParentWindow: true,
     );
+    emit.call(const ApkInfoState.showProgress());
     if (result != null) {
       logger.d('OpenFilesApkInfoEvent >> ${result.paths}');
-      final paths = result.paths;
+      final paths = result.paths.whereNotNull().toList();
       if (paths.isNotEmpty) {
-        // _parserApkInfo.aaptInit();
-        _listInfo = paths.whereNotNull().map((e) => FileInfo(
-            file: File(e),
-            currentFileName: p.basename(e),
-          )).toList();
+        final listApkInfo = await _renameIsolate.getApkInfo(paths);
+        final listInfo = listApkInfo?.map((e) => FileInfo(
+              uuid: e.uuid,
+              file: e.file,
+              currentFileName: p.basename(e.file.path),
+            ));
+        if (listInfo != null) {
+          _listInfo.addAll(listInfo);
+        }
       }
     } else {
       logger.d('OpenFilesApkInfoEvent >> no select');
@@ -64,9 +68,13 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     final pattern = event.replacePattern;
     logger.d('UpdateFilesInfoEvent pattern >> $pattern');
     emit.call(const ApkInfoState.showProgress());
-    final list = _listInfo??[];
+    final list = _listInfo;
     if (list.isNotEmpty) {
-      _listInfo = await _renameIsolate.createNewName(pattern, list);
+      final listInfo = await _renameIsolate.createNewName(pattern, list);
+      if (listInfo != null) {
+        _listInfo.clear();
+        _listInfo.addAll(listInfo);
+      }
     }
     emit.call(ApkInfoState.load(
       listInfo: _listInfo,

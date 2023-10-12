@@ -3,11 +3,11 @@ import 'dart:isolate';
 
 import 'package:apk_renamer/data/rename_isolate/rename_helper.dart';
 
-import '../../domain/model/file_info.dart';
+import '../model/apk_info.dart';
+import '../model/file_info.dart';
 import 'isolate_msg_obj.dart';
 
 FutureOr<void> _createIsolate(_IsolateInit info) async {
-
   final receivePort = ReceivePort();
 
   final renameHelper = RenameHelper();
@@ -18,14 +18,21 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
 
   renameHelper.aaptInit();
 
-  receivePort.listen((data) {
-    final msg = data as IsolateMsgObj;
-    switch (msg) {
-      case UpdateFilesInfo():
-        renameHelper.updateFilesInfo(msg.listInfo, msg.pattern)
-        .then((list) => msg.sendReturnPort.send(list));
-        break;
-    };
+  receivePort.listen(
+    (data) {
+      final msg = data as IsolateMsgObj;
+      switch (msg) {
+        case UpdateFilesInfo():
+          renameHelper
+              .updateFilesInfo(msg.listInfo, msg.pattern)
+              .then((list) => msg.sendReturnPort.send(list));
+          break;
+        case LoadApkInfo():
+          renameHelper
+              .loadApkInfo(msg.paths)
+              .then((list) => msg.sendReturnPort.send(list));
+          break;
+      }
     },
     cancelOnError: false,
   );
@@ -78,21 +85,35 @@ class RenameIsolate {
     }
   }
 
-  Future<List<FileInfo>?> createNewName(String pattern, List<FileInfo> listInfo, ) async {
+  Future<List<ApkInfo>?> getApkInfo(List<String> paths) async {
     final port = ReceivePort();
-    _sendPort?.send(UpdateFilesInfo(
-        sendReturnPort: port.sendPort,
-        pattern: pattern,
-        listInfo: listInfo,
+    _sendPort?.send(LoadApkInfo(
+      sendReturnPort: port.sendPort,
+      paths: paths,
     ));
     final obj = await port.first;
-
-    if (obj is List<FileInfo>?) {
+    if (obj is List<ApkInfo>?) {
       return obj;
     } else {
       return null;
     }
   }
 
-
+  Future<List<FileInfo>?> createNewName(
+    String pattern,
+    List<FileInfo> listInfo,
+  ) async {
+    final port = ReceivePort();
+    _sendPort?.send(UpdateFilesInfo(
+      sendReturnPort: port.sendPort,
+      pattern: pattern,
+      listInfo: listInfo,
+    ));
+    final obj = await port.first;
+    if (obj is List<FileInfo>?) {
+      return obj;
+    } else {
+      return null;
+    }
+  }
 }

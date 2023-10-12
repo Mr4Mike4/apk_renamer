@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 
 import '../../logger.dart';
 import '../model/apk_info.dart';
+import 'uuid.dart';
 
 class ParserApkInfo {
   String? _aaptPath;
@@ -90,6 +91,7 @@ class ParserApkInfo {
       }
     }
     return ApkInfo(
+      uuid: uuidInst.v4(),
       file: file,
       applicationId: applicationId,
       versionCode: versionCode,

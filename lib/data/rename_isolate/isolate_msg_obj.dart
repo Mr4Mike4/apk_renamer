@@ -1,6 +1,6 @@
 import 'dart:isolate';
 
-import '../../domain/model/file_info.dart';
+import '../model/file_info.dart';
 
 sealed class IsolateMsgObj {
   IsolateMsgObj({required this.sendReturnPort});
@@ -17,5 +17,14 @@ class UpdateFilesInfo extends IsolateMsgObj {
   });
   final String pattern;
   final List<FileInfo> listInfo;
+}
+
+class LoadApkInfo extends IsolateMsgObj {
+
+  LoadApkInfo({
+    required super.sendReturnPort,
+    required this.paths,
+  });
+  final Iterable<String> paths;
 }
 

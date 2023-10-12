@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../../domain/model/file_info.dart';
+import '../../../data/model/file_info.dart';
 import '../../../localizations.dart';
 
 class ApkTable extends StatelessWidget {
