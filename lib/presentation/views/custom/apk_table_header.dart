@@ -40,6 +40,9 @@ class ApkTableHeader extends StatelessWidget {
               style: theme.typography.bodyStrong,
             ),
           ),
+          const SizedBox(
+            width: 64,
+          ),
         ],
       ),
     );

@@ -8,4 +8,7 @@ class ApkInfoEvent with _$ApkInfoEvent {
   const factory ApkInfoEvent.updateFilesInfo({
     required String replacePattern,
   }) = UpdateFilesInfoEvent;
+  const factory ApkInfoEvent.deleteFilesInfo({
+    required String? uuid,
+  }) = DeleteFilesInfoEvent;
 }

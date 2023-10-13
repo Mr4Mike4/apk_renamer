@@ -6,9 +6,14 @@ import 'apk_table_header.dart';
 import 'apk_table_item.dart';
 
 class ApkTable extends StatefulWidget {
-  const ApkTable({super.key, this.listInfo});
+  const ApkTable({
+    super.key,
+    this.listInfo,
+    this.onDeleteItem,
+  });
 
   final List<FileInfo>? listInfo;
+  final DelFileInfoCallback? onDeleteItem;
 
   @override
   State<ApkTable> createState() => _ApkTableState();
@@ -27,6 +32,7 @@ class _ApkTableState extends State<ApkTable> {
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final FluentThemeData theme = FluentTheme.of(context);
@@ -52,12 +58,14 @@ class _ApkTableState extends State<ApkTable> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.listInfo?.length??0,
+                itemCount: widget.listInfo?.length ?? 0,
                 controller: _scrollController,
                 itemBuilder: (context, index) {
                   final item = widget.listInfo![index];
                   return ApkTableItem(
+                    key: ValueKey(item.uuid),
                     fileInfo: item,
+                    onDelete: widget.onDeleteItem,
                   );
                 },
               ),
@@ -66,48 +74,5 @@ class _ApkTableState extends State<ApkTable> {
         ),
       ),
     );
-  }
-
-  List<TableRow> _rows(FluentThemeData theme, AppLocalizations S) {
-    final rowList = <TableRow>[];
-    rowList.add(TableRow(
-      children: <Widget>[
-        const SizedBox(),
-        TableCell(
-          child: Text(
-            S.table_column_name,
-            style: theme.typography.bodyStrong,
-          ),
-        ),
-        TableCell(
-          child: Text(
-            S.table_column_new_name,
-            style: theme.typography.bodyStrong,
-          ),
-        ),
-      ],
-    ));
-    widget.listInfo?.forEach((e) {
-      rowList.add(TableRow(
-        decoration: const BoxDecoration(),
-        children: <Widget>[
-          const TableCell(
-            child: Center(
-              child: Checkbox(
-                checked: true,
-                onChanged: null,
-              ),
-            ),
-          ),
-          TableCell(
-            child: Text(e.currentFileName ?? ''),
-          ),
-          TableCell(
-            child: Text(e.newFileName ?? ''),
-          ),
-        ],
-      ));
-    });
-    return rowList;
   }
 }

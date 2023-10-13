@@ -32,6 +32,10 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
               .loadApkInfo(msg.paths)
               .then((list) => msg.sendReturnPort.send(list));
           break;
+        case DeleteFileInfo():
+          renameHelper
+              .deleteFileInfo(msg.uuid);
+          break;
       }
     },
     cancelOnError: false,
@@ -115,5 +119,19 @@ class RenameIsolate {
     } else {
       return null;
     }
+  }
+
+  Future<void> deleteFileInfo(String uuid) async {
+    final port = ReceivePort();
+    _sendPort?.send(DeleteFileInfo(
+      sendReturnPort: port.sendPort,
+      uuid: uuid,
+    ));
+    // final obj = await port.first;
+    // if (obj is List<FileInfo>?) {
+    //   return obj;
+    // } else {
+    //   return null;
+    // }
   }
 }

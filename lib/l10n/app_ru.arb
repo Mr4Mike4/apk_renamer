@@ -8,8 +8,19 @@
 
   "btn_add_files": "Добавить файлы",
   "btn_preview": "Предпросмотр",
+  "btn_yes": "Да",
+  "btn_cancel": "Отменить",
 
   "table_column_name": "Исходное имя",
   "table_column_new_name": "Новое имя",
-  "file_name_mask": "Маска для имени файла"
+  "file_name_mask": "Маска для имени файла",
+  "file_delete_confirm": "Вы действительно хотите удалить \"{fileName}\" из списка?",
+  "@file_delete_confirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "app.apk"
+      }
+    }
+  }
 }

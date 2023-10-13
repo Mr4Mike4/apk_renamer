@@ -1,9 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../data/model/file_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 import '../../localizations.dart';
 import 'custom/apk_table.dart';
+import 'custom/confirm_dialog.dart';
 import 'custom/input_text_field.dart';
 
 class ApkListPage extends StatefulWidget {
@@ -26,10 +28,28 @@ class _ApkListPageState extends State<ApkListPage> {
     _bloc = ApkInfoBloc();
   }
 
+  void _deleteItem(FileInfo fileInfo) {
+    final S = AppLocal.of(context);
+    showDialog<bool>(
+      context: context,
+      builder: (_) {
+        return ConfirmDialog(
+          content: S.file_delete_confirm(fileInfo.currentFileName),
+        );
+      },
+    ).then((result) {
+      if (result == true) {
+        _bloc.add(ApkInfoEvent.deleteFilesInfo(
+          uuid: fileInfo.uuid,
+        ));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
+    // final theme = FluentTheme.of(context);
     final S = AppLocal.of(context);
     return ScaffoldPage(
       // header: const PageHeader(
@@ -85,9 +105,10 @@ class _ApkListPageState extends State<ApkListPage> {
                 builder: (context, state) {
                   return state.maybeWhen(
                     load: (listInfo) => ApkTable(
-                        key: const Key('apk_table'),
-                        listInfo: listInfo,
-                      ),
+                      key: const Key('apk_table'),
+                      listInfo: listInfo,
+                      onDeleteItem: _deleteItem,
+                    ),
                     showProgress: () => const Center(child: ProgressRing()),
                     orElse: () => const ApkTable(
                       key: Key('apk_table'),

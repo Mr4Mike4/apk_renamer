@@ -19,6 +19,7 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     on<InitApkInfoEvent>(_onInitApkInfoEvent);
     on<OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
     on<UpdateFilesInfoEvent>(_onUpdateFilesInfoEvent);
+    on<DeleteFilesInfoEvent>(_onDeleteFilesInfoEvent);
     add(const ApkInfoEvent.init());
   }
 
@@ -79,5 +80,20 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     emit.call(ApkInfoState.load(
       listInfo: _listInfo,
     ));
+  }
+
+  FutureOr<void> _onDeleteFilesInfoEvent(
+      DeleteFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+    final uuid = event.uuid;
+    logger.d('DeleteFilesInfoEvent uuid >> $uuid');
+    if (uuid == null) return;
+    final info = _listInfo.firstWhereOrNull((e) => e.uuid == uuid);
+    if (info != null) {
+      await _renameIsolate.deleteFileInfo(uuid);
+      _listInfo.remove(info);
+      emit.call(ApkInfoState.load(
+        listInfo: _listInfo,
+      ));
+    }
   }
 }

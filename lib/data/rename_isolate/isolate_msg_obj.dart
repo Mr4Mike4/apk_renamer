@@ -28,3 +28,12 @@ class LoadApkInfo extends IsolateMsgObj {
   final Iterable<String> paths;
 }
 
+class DeleteFileInfo extends IsolateMsgObj {
+
+  DeleteFileInfo({
+    required super.sendReturnPort,
+    required this.uuid,
+  });
+  final String uuid;
+}
+

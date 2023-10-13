@@ -2,13 +2,17 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import '../../../data/model/file_info.dart';
 
+typedef DelFileInfoCallback = void Function(FileInfo fileInfo);
+
 class ApkTableItem extends StatelessWidget {
   const ApkTableItem({
     super.key,
     required this.fileInfo,
+    this.onDelete,
   });
 
   final FileInfo fileInfo;
+  final DelFileInfoCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,17 @@ class ApkTableItem extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Text(fileInfo.newFileName ?? ''),
+          ),
+          SizedBox(
+            width: 64,
+            child: Center(
+              child: IconButton(
+                icon: const Icon(FluentIcons.delete, size: 18.0),
+                onPressed: () {
+                  onDelete?.call(fileInfo);
+                },
+              ),
+            ),
           ),
         ],
       ),

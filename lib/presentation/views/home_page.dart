@@ -1,4 +1,3 @@
-import 'package:apk_renamer/internal/application.dart';
 import 'package:apk_renamer/presentation/views/custom/window_buttons.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
@@ -42,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
     assert(debugCheckHasFluentTheme(context));
     final theme = FluentTheme.of(context);
     if (widget.shellContext != null) {
-      if (router.canPop() == false) {
+      if (context.canPop() == false) {
         setState(() {});
       }
     }

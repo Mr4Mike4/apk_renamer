@@ -6,6 +6,8 @@ import 'package:system_theme/system_theme.dart';
 import '../localizations.dart';
 import '../presentation/views/home_page.dart';
 
+part 'router.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -26,9 +28,9 @@ class MyApp extends StatelessWidget {
           glowFactor: is10footScreen(context) ? 2.0 : 0.0,
         ),
       ),
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: router.routerDelegate,
-      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: _router.routeInformationParser,
+      routerDelegate: _router.routerDelegate,
+      routeInformationProvider: _router.routeInformationProvider,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('ru'),
@@ -46,29 +48,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-final rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
-final router = GoRouter(
-  navigatorKey: rootNavigatorKey,
-  routes: [
-    ShellRoute(
-      navigatorKey: _shellNavigatorKey,
-      builder: (context, state, child) {
-        return MyHomePage(
-          child: child,
-          shellContext: _shellNavigatorKey.currentContext,
-          state: state,
-        );
-      },
-      routes: [
-        /// Home
-        GoRoute(
-          path: '/',
-          name: 'home',
-          builder: (context, state) => const ApkListPage(),
-        ),
-      ],
-    ),
-  ],
-);

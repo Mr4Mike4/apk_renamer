@@ -10,7 +10,7 @@ part 'apk_info.freezed.dart';
 )
 class ApkInfo with _$ApkInfo {
   const factory ApkInfo({
-    required String? uuid,
+    required String uuid,
     required File file,
     String? applicationId,
     String? versionCode,

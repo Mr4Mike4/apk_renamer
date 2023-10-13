@@ -38,7 +38,7 @@ class RenameHelper {
 
   Future<List<FileInfo>> updateFilesInfo(
       List<FileInfo> listInfo, String pattern) async {
-    logger.d('UpdateFilesInfoEvent pattern >> $pattern');
+    logger.d('updateFilesInfo pattern >> $pattern');
     if (listInfo.isNotEmpty) {
       final patternInfo = await _parserPattern.parsePattern(pattern);
       final renamer = RenamerFiles(
@@ -55,5 +55,13 @@ class RenameHelper {
       }
     }
     return listInfo;
+  }
+
+  Future<void> deleteFileInfo(String uuid) async {
+    logger.d('deleteFileInfo uuid >> $uuid');
+    final info = _listApkInfo.firstWhereOrNull((e) => e.uuid == uuid);
+    if (info != null) {
+      _listApkInfo.remove(info);
+    }
   }
 }

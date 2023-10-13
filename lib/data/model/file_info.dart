@@ -11,7 +11,7 @@ part 'file_info.freezed.dart';
 )
 class FileInfo with _$FileInfo {
   const factory FileInfo({
-    required String? uuid,
+    required String uuid,
     required File file,
     required String currentFileName,
     String? newFileName,
