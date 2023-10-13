@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -15,6 +14,6 @@ class FileInfo with _$FileInfo {
     required File file,
     required String currentFileName,
     String? newFileName,
-    Bool? isEnable,
+    @Default(true) bool isEnable,
   }) = _FileInfoObj;
 }

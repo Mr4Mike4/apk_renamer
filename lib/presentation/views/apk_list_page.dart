@@ -46,6 +46,13 @@ class _ApkListPageState extends State<ApkListPage> {
     });
   }
 
+  void _changedEnable(bool? checked, FileInfo fileInfo) {
+    _bloc.add(ApkInfoEvent.changedEnable(
+      uuid: fileInfo.uuid,
+      checked: checked ?? false,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -91,6 +98,16 @@ class _ApkListPageState extends State<ApkListPage> {
                       child: Text(S.btn_preview),
                     ),
                   ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FilledButton(
+                      onPressed: () {
+                        _bloc.add(const ApkInfoEvent.renameFilesInfo());
+                      },
+                      child: Text(S.btn_rename_files),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -108,6 +125,7 @@ class _ApkListPageState extends State<ApkListPage> {
                       key: const Key('apk_table'),
                       listInfo: listInfo,
                       onDeleteItem: _deleteItem,
+                      onChangedEnable: _changedEnable,
                     ),
                     showProgress: () => const Center(child: ProgressRing()),
                     orElse: () => const ApkTable(

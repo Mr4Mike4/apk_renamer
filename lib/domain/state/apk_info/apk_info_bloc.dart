@@ -20,10 +20,12 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     on<OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
     on<UpdateFilesInfoEvent>(_onUpdateFilesInfoEvent);
     on<DeleteFilesInfoEvent>(_onDeleteFilesInfoEvent);
+    on<RenameFilesInfoEvent>(_onRenameFilesInfoEvent);
+    on<ChangedEnableFilesInfoEvent>(_onChangedEnableFilesInfoEvent);
     add(const ApkInfoEvent.init());
   }
 
-  List<FileInfo> _listInfo = [];
+  final List<FileInfo> _listInfo = [];
 
   final _renameIsolate = RenameIsolate();
 
@@ -95,5 +97,39 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
         listInfo: _listInfo,
       ));
     }
+  }
+
+  FutureOr<void> _onRenameFilesInfoEvent(
+      RenameFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+    logger.d('RenameFilesInfoEvent');
+    final list = _listInfo;
+    if (list.isNotEmpty) {
+      final listInfo = await _renameIsolate.renameFilesInfo(list);
+      if (listInfo != null) {
+        _listInfo.clear();
+        _listInfo.addAll(listInfo);
+      }
+    }
+    emit.call(ApkInfoState.load(
+      listInfo: _listInfo,
+    ));
+  }
+
+  FutureOr<void> _onChangedEnableFilesInfoEvent(
+      ChangedEnableFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+    final uuid = event.uuid;
+    logger.d('ChangedEnableFilesInfoEvent uuid >> $uuid');
+    for (int i = 0; i < _listInfo.length; i++) {
+      final info = _listInfo[i];
+      if (info.uuid == uuid) {
+        _listInfo[i] = info.copyWith(
+          isEnable: event.checked,
+        );
+        break;
+      }
+    }
+    emit.call(ApkInfoState.load(
+      listInfo: _listInfo,
+    ));
   }
 }

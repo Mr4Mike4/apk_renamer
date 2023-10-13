@@ -1,40 +1,44 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:apk_renamer/data/rename_isolate/rename_helper.dart';
-
 import '../model/apk_info.dart';
 import '../model/file_info.dart';
 import 'isolate_msg_obj.dart';
+import 'rename_controller.dart';
 
 FutureOr<void> _createIsolate(_IsolateInit info) async {
   final receivePort = ReceivePort();
 
-  final renameHelper = RenameHelper();
+  final renameController = RenameController();
 
   info.sendPort.send(IsolateReturn(
     sendPort: receivePort.sendPort,
   ));
 
-  renameHelper.aaptInit();
+  renameController.aaptInit();
 
   receivePort.listen(
     (data) {
       final msg = data as IsolateMsgObj;
       switch (msg) {
         case UpdateFilesInfo():
-          renameHelper
+          renameController
               .updateFilesInfo(msg.listInfo, msg.pattern)
               .then((list) => msg.sendReturnPort.send(list));
           break;
         case LoadApkInfo():
-          renameHelper
+          renameController
               .loadApkInfo(msg.paths)
               .then((list) => msg.sendReturnPort.send(list));
           break;
         case DeleteFileInfo():
-          renameHelper
+          renameController
               .deleteFileInfo(msg.uuid);
+          break;
+        case RenameFilesInfo():
+          renameController
+              .renameFilesInfo(msg.listInfo)
+              .then((list) => msg.sendReturnPort.send(list));
           break;
       }
     },
@@ -133,5 +137,19 @@ class RenameIsolate {
     // } else {
     //   return null;
     // }
+  }
+
+  Future<List<FileInfo>?> renameFilesInfo(List<FileInfo> listInfo) async {
+    final port = ReceivePort();
+    _sendPort?.send(RenameFilesInfo(
+      sendReturnPort: port.sendPort,
+      listInfo: listInfo,
+    ));
+    final obj = await port.first;
+    if (obj is List<FileInfo>?) {
+      return obj;
+    } else {
+      return null;
+    }
   }
 }

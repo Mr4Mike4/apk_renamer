@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:path/path.dart' as p;
 
 import '../../logger.dart';
 import '../model/apk_info.dart';
@@ -10,11 +11,11 @@ import '../repository/parser_apk_info.dart';
 import '../repository/parser_replace_pattern.dart';
 import '../repository/renamer_files.dart';
 
-class RenameHelper {
+class RenameController {
   final _parserApkInfo = ParserApkInfo();
   final _parserPattern = ParserReplacePattern();
 
-  List<ApkInfo> _listApkInfo = [];
+  final List<ApkInfo> _listApkInfo = [];
 
   void aaptInit() {
     _parserApkInfo.aaptInit();
@@ -47,10 +48,12 @@ class RenameHelper {
       );
       for (int i = 0; i < listInfo.length; i++) {
         final info = listInfo[i];
-        final apkInfo = _listApkInfo.firstWhereOrNull((e)=> e.uuid == info.uuid);
+        final ext = p.extension(info.file.path);
+        final apkInfo =
+            _listApkInfo.firstWhereOrNull((e) => e.uuid == info.uuid);
         final newFileName = await renamer.createNewName(apkInfo);
         listInfo[i] = info.copyWith(
-          newFileName: newFileName,
+          newFileName: '$newFileName$ext',
         );
       }
     }
@@ -63,5 +66,25 @@ class RenameHelper {
     if (info != null) {
       _listApkInfo.remove(info);
     }
+  }
+
+  Future<List<FileInfo>?> renameFilesInfo(List<FileInfo> listInfo) async {
+    logger.d('renameFilesInfo listInfo >> ${listInfo.length}');
+    for (int i = 0; i < listInfo.length; i++) {
+      final info = listInfo[i];
+      final file = info.file;
+      final newFileName = info.newFileName;
+      if (info.isEnable && newFileName != null && await file.exists()) {
+        final newPath = p.join(file.parent.path, newFileName);
+        logger.d('renameFilesInfo newPath >> $newPath');
+        final newFile = await file.rename(newPath);
+        listInfo[i] = info.copyWith(
+          currentFileName: newFileName,
+          file: newFile,
+          isEnable: false,
+        );
+      }
+    }
+    return listInfo;
   }
 }

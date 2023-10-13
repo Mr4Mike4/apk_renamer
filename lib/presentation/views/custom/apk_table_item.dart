@@ -3,16 +3,20 @@ import 'package:fluent_ui/fluent_ui.dart';
 import '../../../data/model/file_info.dart';
 
 typedef DelFileInfoCallback = void Function(FileInfo fileInfo);
+typedef ChangedEnableFileInfoCallback = void Function(
+    bool? checked, FileInfo fileInfo);
 
 class ApkTableItem extends StatelessWidget {
   const ApkTableItem({
     super.key,
     required this.fileInfo,
     this.onDelete,
+    this.onChangedEnable,
   });
 
   final FileInfo fileInfo;
   final DelFileInfoCallback? onDelete;
+  final ChangedEnableFileInfoCallback? onChangedEnable;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +24,14 @@ class ApkTableItem extends StatelessWidget {
       height: 32,
       child: Row(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 64,
             child: Center(
               child: Checkbox(
-                checked: true,
-                onChanged: null,
+                checked: fileInfo.isEnable,
+                onChanged: onChangedEnable != null
+                    ? (bool? checked) => onChangedEnable!(checked, fileInfo)
+                    : null,
               ),
             ),
           ),

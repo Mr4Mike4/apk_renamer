@@ -6,7 +6,7 @@ part of 'apk_info_bloc.dart';
 )
 class ApkInfoState with _$ApkInfoState {
   const factory ApkInfoState.init() = ApkInfoInitial;
-
+  // const factory ApkInfoState.errorMsg(String? errorMsg) = AuthStateMsgError;
   const factory ApkInfoState.load({
     List<FileInfo>? listInfo,
   }) = ApkInfoLoad;

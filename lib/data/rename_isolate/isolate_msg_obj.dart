@@ -37,3 +37,12 @@ class DeleteFileInfo extends IsolateMsgObj {
   final String uuid;
 }
 
+class RenameFilesInfo extends IsolateMsgObj {
+
+  RenameFilesInfo({
+    required super.sendReturnPort,
+    required this.listInfo,
+  });
+  final List<FileInfo> listInfo;
+}
+

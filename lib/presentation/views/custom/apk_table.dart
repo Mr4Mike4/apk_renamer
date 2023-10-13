@@ -10,10 +10,12 @@ class ApkTable extends StatefulWidget {
     super.key,
     this.listInfo,
     this.onDeleteItem,
+    this.onChangedEnable,
   });
 
   final List<FileInfo>? listInfo;
   final DelFileInfoCallback? onDeleteItem;
+  final ChangedEnableFileInfoCallback? onChangedEnable;
 
   @override
   State<ApkTable> createState() => _ApkTableState();
@@ -66,6 +68,7 @@ class _ApkTableState extends State<ApkTable> {
                     key: ValueKey(item.uuid),
                     fileInfo: item,
                     onDelete: widget.onDeleteItem,
+                    onChangedEnable: widget.onChangedEnable,
                   );
                 },
               ),
