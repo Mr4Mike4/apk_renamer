@@ -14,7 +14,7 @@ part 'settings_event.dart';
 part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(const SettingsState.initial()) {
+  SettingsBloc(this._pref) : super(const SettingsState.initial()) {
     on<_LoadSettingsEvent>(_onLoadSettingsEvent);
     on<_SelectAaptPathSettingsEvent>(_onSelectAaptPathSettingsEvent);
     on<_SaveSettingsEvent>(_onSaveSettingsEvent);
@@ -23,7 +23,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     });
   }
 
-  final _pref = PreferencesRepository();
+  final PreferencesRepository _pref;
   late final AppLocalizations _S;
 
   FutureOr<void> _onLoadSettingsEvent(

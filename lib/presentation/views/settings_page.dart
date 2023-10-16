@@ -2,6 +2,7 @@ import 'package:apk_renamer/presentation/views/custom/error_dialog.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kiwi/kiwi.dart';
 
 import '../../domain/state/settings/settings_bloc.dart';
 import '../../localizations.dart';
@@ -22,7 +23,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    _bloc = SettingsBloc()
+    final di = KiwiContainer();
+    _bloc = SettingsBloc(
+      di.resolve(),
+    )
     ..add(const SettingsEvent.load());
   }
 

@@ -17,7 +17,8 @@ part 'apk_info_event.dart';
 part 'apk_info_state.dart';
 
 class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
-  ApkInfoBloc() : super(const ApkInfoState.init()) {
+  ApkInfoBloc(this._renameIsolate, this._pref)
+      : super(const ApkInfoState.init()) {
     on<InitApkInfoEvent>(_onInitApkInfoEvent);
     on<OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
     on<UpdateFilesInfoEvent>(_onUpdateFilesInfoEvent);
@@ -29,8 +30,8 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
 
   final List<FileInfo> _listInfo = [];
 
-  final _renameIsolate = RenameIsolate();
-  final _pref = PreferencesRepository();
+  final RenameIsolate _renameIsolate;
+  final PreferencesRepository _pref;
 
   FutureOr<void> _onInitApkInfoEvent(
       InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {

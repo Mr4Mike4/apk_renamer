@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kiwi/kiwi.dart';
 
 import '../../data/model/file_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
@@ -26,7 +27,11 @@ class _ApkListPageState extends State<ApkListPage> {
   @override
   void initState() {
     super.initState();
-    _bloc = ApkInfoBloc();
+    final di = KiwiContainer();
+    _bloc = ApkInfoBloc(
+      di.resolve(),
+      di.resolve(),
+    );
   }
 
   void _deleteItem(FileInfo fileInfo) {
