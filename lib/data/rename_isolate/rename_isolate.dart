@@ -3,22 +3,25 @@ import 'dart:isolate';
 
 import '../model/apk_info.dart';
 import '../model/file_info.dart';
+import '../model/settings_obj.dart';
 import 'isolate_msg_obj.dart';
 import 'rename_controller.dart';
 
 FutureOr<void> _createIsolate(_IsolateInit info) async {
   final receivePort = ReceivePort();
 
+  // final pref = PreferencesRepository();
   final renameController = RenameController();
 
   info.sendPort.send(IsolateReturn(
     sendPort: receivePort.sendPort,
   ));
 
-  renameController.aaptInit();
+  // final aaptPath = await pref.getAaptPath();
+  await renameController.aaptInit(info.settings.aaptPath);
 
   receivePort.listen(
-    (data) {
+        (data) {
       final msg = data as IsolateMsgObj;
       switch (msg) {
         case UpdateFilesInfo():
@@ -40,6 +43,11 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
               .renameFilesInfo(msg.listInfo)
               .then((list) => msg.sendReturnPort.send(list));
           break;
+        case SettingsFilesInfo():
+          renameController
+              .aaptInit(msg.settings.aaptPath)
+              .then((res) => msg.sendReturnPort.send(res));
+          break;
       }
     },
     cancelOnError: false,
@@ -49,8 +57,10 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
 class _IsolateInit {
   const _IsolateInit({
     required this.sendPort,
+    required this.settings,
   });
 
+  final SettingsObj settings;
   final SendPort sendPort;
 }
 
@@ -70,13 +80,14 @@ class RenameIsolate {
 
   bool get hasIsolate => _renameIsolate != null;
 
-  Future<void> init() async {
+  Future<void> init(SettingsObj settings) async {
     if (hasIsolate) return;
     final receivePort = ReceivePort();
     _renameIsolate = await Isolate.spawn<_IsolateInit>(
       _createIsolate,
       _IsolateInit(
         sendPort: receivePort.sendPort,
+        settings: settings,
       ),
       debugName: 'Rename',
     );
@@ -107,10 +118,8 @@ class RenameIsolate {
     }
   }
 
-  Future<List<FileInfo>?> createNewName(
-    String pattern,
-    List<FileInfo> listInfo,
-  ) async {
+  Future<List<FileInfo>?> createNewName(String pattern,
+      List<FileInfo> listInfo,) async {
     final port = ReceivePort();
     _sendPort?.send(UpdateFilesInfo(
       sendReturnPort: port.sendPort,
@@ -151,5 +160,14 @@ class RenameIsolate {
     } else {
       return null;
     }
+  }
+
+  Future<void> updateSettings(SettingsObj settings) async {
+    final port = ReceivePort();
+    _sendPort?.send(SettingsFilesInfo(
+      sendReturnPort: port.sendPort,
+      settings: settings,
+    ));
+    await port.first;
   }
 }

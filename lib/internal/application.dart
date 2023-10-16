@@ -5,6 +5,7 @@ import 'package:system_theme/system_theme.dart';
 
 import '../localizations.dart';
 import '../presentation/views/home_page.dart';
+import '../presentation/views/settings_page.dart';
 
 part 'router.dart';
 

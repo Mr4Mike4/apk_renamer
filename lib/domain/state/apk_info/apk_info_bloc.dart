@@ -7,7 +7,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../data/model/file_info.dart';
+import '../../../data/model/settings_obj.dart';
 import '../../../data/rename_isolate/rename_isolate.dart';
+import '../../../data/repository/preferences_repository.dart';
 import '../../../logger.dart';
 
 part 'apk_info_bloc.freezed.dart';
@@ -28,10 +30,16 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
   final List<FileInfo> _listInfo = [];
 
   final _renameIsolate = RenameIsolate();
+  final _pref = PreferencesRepository();
 
   FutureOr<void> _onInitApkInfoEvent(
       InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
-    await _renameIsolate.init();
+    final aaptPath = await _pref.getAaptPath();
+    if (aaptPath != null) {
+      await _renameIsolate.init(SettingsObj(
+        aaptPath: aaptPath,
+      ));
+    }
   }
 
   FutureOr<void> _onOpenFilesApkInfoEvent(

@@ -20,6 +20,11 @@ final _router = GoRouter(
           name: 'home',
           builder: (context, state) => const ApkListPage(),
         ),
+        GoRoute(
+          path: '/settings',
+          name: 'settings',
+          builder: (context, state) => const SettingsPage(),
+        ),
       ],
     ),
   ],

@@ -10,7 +10,10 @@
   "btn_preview": "Предпросмотр",
   "btn_rename_files": "Переименовать",
   "btn_yes": "Да",
+  "btn_save": "Сохранить",
   "btn_cancel": "Отменить",
+  "btn_select": "Выбрать",
+  "btn_close": "Закрыть",
 
   "table_column_name": "Исходное имя",
   "table_column_new_name": "Новое имя",
@@ -23,5 +26,11 @@
         "example": "app.apk"
       }
     }
-  }
+  },
+
+  "settings_title": "Настройки",
+  "settings_aapt_path": "Путь к aapt2",
+  "settings_select_aapt_path": "Выберете папку с aapt2",
+
+  "error_aapt_path": "Выберете корректный путь к aapt2"
 }

@@ -17,8 +17,8 @@ class RenameController {
 
   final List<ApkInfo> _listApkInfo = [];
 
-  void aaptInit() {
-    _parserApkInfo.aaptInit();
+  Future<bool> aaptInit(String? aaptPath) {
+    return _parserApkInfo.aaptInit(aaptPath);
   }
 
   Future<List<ApkInfo>> loadApkInfo(Iterable<String> paths) async {

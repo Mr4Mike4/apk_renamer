@@ -8,6 +8,17 @@ import '../model/apk_info.dart';
 import 'uuid.dart';
 
 class ParserApkInfo {
+  static const String aaptAppWin = 'aapt2.exe';
+  static const String aaptApp = 'aapt2';
+
+  static String getAapt() {
+    if (Platform.isWindows) {
+      return aaptAppWin;
+    } else {
+      return aaptApp;
+    }
+  }
+
   String? _aaptPath;
 
   final _splitter = const LineSplitter();
@@ -21,14 +32,38 @@ class ParserApkInfo {
 
   final _regExpValue = RegExp(r"'([^']+)'");
 
-  void aaptInit() {
-    final String? androidHome = Platform.environment['ANDROID_SDK_ROOT'];
-    if ((androidHome ?? '').isEmpty) {
-      throw Exception('Missing `ANDROID_HOME` environment variable.');
+  Future<bool> aaptInit(String? aaptPath) async {
+    // final String? androidHome = Platform.environment['ANDROID_SDK_ROOT'];
+    // if ((androidHome ?? '').isEmpty) {
+    //   throw Exception('Missing `ANDROID_HOME` environment variable.');
+    // }
+    // final buildToolsDir = Directory(p.join(androidHome!, 'build-tools'));
+    // final aaptDir = buildToolsDir.listSync().last.path;
+    // _aaptPath = p.join(aaptDir, aaptApp);
+    if (aaptPath == null) return false;
+    final aapt = File(aaptPath);
+    if (await aapt.exists()) {
+      _aaptPath = aaptPath;
+      return true;
+    } else {
+      return false;
     }
-    final buildToolsDir = Directory(p.join(androidHome!, 'build-tools'));
-    final aaptDir = buildToolsDir.listSync().last.path;
-    _aaptPath = p.join(aaptDir, 'aapt2');
+  }
+
+  static Future<String?> getAaptApp(String? aaptDirPath) async {
+    if (aaptDirPath == null) return null;
+    final aaptPath = p.join(aaptDirPath, getAapt());
+    final processResult = await Process.run(
+      aaptPath,
+      ['version'],
+    );
+    final String resultString = processResult.stderr;
+    if (processResult.exitCode == 0 &&
+        resultString.startsWith('Android Asset Packaging Tool')) {
+      return aaptPath;
+    } else {
+      return null;
+    }
   }
 
   Future<ApkInfo?> parseFile(File file) async {

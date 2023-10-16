@@ -1,6 +1,7 @@
 import 'dart:isolate';
 
 import '../model/file_info.dart';
+import '../model/settings_obj.dart';
 
 sealed class IsolateMsgObj {
   IsolateMsgObj({required this.sendReturnPort});
@@ -44,5 +45,14 @@ class RenameFilesInfo extends IsolateMsgObj {
     required this.listInfo,
   });
   final List<FileInfo> listInfo;
+}
+
+class SettingsFilesInfo extends IsolateMsgObj {
+
+  SettingsFilesInfo({
+    required super.sendReturnPort,
+    required this.settings,
+  });
+  final SettingsObj settings;
 }
 

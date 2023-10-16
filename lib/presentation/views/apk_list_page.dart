@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../data/model/file_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
@@ -106,6 +107,16 @@ class _ApkListPageState extends State<ApkListPage> {
                         _bloc.add(const ApkInfoEvent.renameFilesInfo());
                       },
                       child: Text(S.btn_rename_files),
+                    ),
+                  ),
+                  Align(
+                    alignment: AlignmentDirectional.bottomStart,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                        icon: const Icon(FluentIcons.settings, size: 24.0),
+                        onPressed: () => context.push('/settings'),
+                      )
                     ),
                   ),
                 ],

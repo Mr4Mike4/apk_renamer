@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'data/repository/preferences_repository.dart';
 import 'internal/application.dart';
 
 bool get isDesktop {
@@ -25,6 +26,8 @@ void main() async {
       ].contains(defaultTargetPlatform)) {
     SystemTheme.accentColor.load();
   }
+
+  PreferencesRepository.init();
 
   if (isDesktop) {
     // await flutter_acrylic.Window.initialize();
