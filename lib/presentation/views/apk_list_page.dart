@@ -7,6 +7,7 @@ import '../../data/model/file_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 import '../../localizations.dart';
 import 'custom/apk_table.dart';
+import 'custom/checkbox_row.dart';
 import 'custom/confirm_dialog.dart';
 import 'custom/input_text_field.dart';
 
@@ -23,6 +24,8 @@ class _ApkListPageState extends State<ApkListPage> {
   late ApkInfoBloc _bloc;
 
   final _replacePatternController = TextEditingController();
+  final _destPathController = TextEditingController();
+  final _copyToFolderController = ValueNotifier<bool?>(true);
 
   @override
   void initState() {
@@ -59,6 +62,13 @@ class _ApkListPageState extends State<ApkListPage> {
     ));
   }
 
+  void _renameFiles() {
+    _bloc.add(ApkInfoEvent.renameFilesInfo(
+      destPath: _destPathController.text,
+      copyToFolder: _copyToFolderController.value,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -71,8 +81,7 @@ class _ApkListPageState extends State<ApkListPage> {
       content: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Flexible(
-            fit: FlexFit.tight,
+          Expanded(
             child: SizedBox(
               width: 400,
               child: Column(
@@ -104,51 +113,104 @@ class _ApkListPageState extends State<ApkListPage> {
                       child: Text(S.btn_preview),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CheckBoxRow(
+                      text: S.copy_to_folder,
+                      checkboxController: _copyToFolderController,
+                    ),
+                  ),
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FilledButton(
-                      onPressed: () {
-                        _bloc.add(const ApkInfoEvent.renameFilesInfo());
-                      },
+                      onPressed: _renameFiles,
                       child: Text(S.btn_rename_files),
                     ),
                   ),
                   Align(
                     alignment: AlignmentDirectional.bottomStart,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        icon: const Icon(FluentIcons.settings, size: 24.0),
-                        onPressed: () => context.push('/settings'),
-                      )
-                    ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          icon: const Icon(FluentIcons.settings, size: 24.0),
+                          onPressed: () => context.push('/settings'),
+                        )),
                   ),
                 ],
               ),
             ),
           ),
-          Flexible(
-            fit: FlexFit.loose,
+          Expanded(
             flex: 3,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
-                bloc: _bloc,
-                builder: (context, state) {
-                  return state.maybeWhen(
-                    load: (listInfo) => ApkTable(
-                      key: const Key('apk_table'),
-                      listInfo: listInfo,
-                      onDeleteItem: _deleteItem,
-                      onChangedEnable: _changedEnable,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
+                      bloc: _bloc,
+                      buildWhen: (previous, current) {
+                        return current.maybeMap(
+                          load: (st) {
+                            _destPathController.text = st.destPath ?? '';
+                            return false;
+                          },
+                          selectDestPath: (st) {
+                            _destPathController.text = st.destPath ?? '';
+                            return false;
+                          },
+                          orElse: () => true,
+                        );
+                      },
+                      builder: (context, state) {
+                        return state.maybeWhen(
+                          loadApkInfo: (listInfo) => ApkTable(
+                            key: const Key('apk_table'),
+                            listInfo: listInfo,
+                            onDeleteItem: _deleteItem,
+                            onChangedEnable: _changedEnable,
+                          ),
+                          showProgress: () =>
+                              const Center(child: ProgressRing()),
+                          orElse: () => const ApkTable(
+                            key: Key('apk_table'),
+                          ),
+                        );
+                      },
                     ),
-                    showProgress: () => const Center(child: ProgressRing()),
-                    orElse: () => const ApkTable(
-                      key: Key('apk_table'),
-                    ),
-                  );
-                },
+                  ),
+                  ValueListenableBuilder<bool?>(
+                      valueListenable: _copyToFolderController,
+                      builder: (BuildContext context, value, child) {
+                        final visible = value ?? false;
+                        return Visibility(
+                          maintainSize: false,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: visible,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: InputTextField(
+                                  labelText: S.dest_folder,
+                                  controller: _destPathController,
+                                  readOnly: true,
+                                ),
+                              ),
+                              Button(
+                                child: Text(S.btn_select),
+                                onPressed: () {
+                                  _bloc
+                                      .add(const ApkInfoEvent.selectDestPath());
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                ],
               ),
             ),
           ),

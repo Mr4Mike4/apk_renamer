@@ -10,6 +10,7 @@ import '../../../data/model/file_info.dart';
 import '../../../data/model/settings_obj.dart';
 import '../../../data/rename_isolate/rename_isolate.dart';
 import '../../../data/repository/preferences_repository.dart';
+import '../../../internal/localiz.dart';
 import '../../../logger.dart';
 
 part 'apk_info_bloc.freezed.dart';
@@ -19,12 +20,16 @@ part 'apk_info_state.dart';
 class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
   ApkInfoBloc(this._renameIsolate, this._pref)
       : super(const ApkInfoState.init()) {
-    on<InitApkInfoEvent>(_onInitApkInfoEvent);
-    on<OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
-    on<UpdateFilesInfoEvent>(_onUpdateFilesInfoEvent);
-    on<DeleteFilesInfoEvent>(_onDeleteFilesInfoEvent);
-    on<RenameFilesInfoEvent>(_onRenameFilesInfoEvent);
-    on<ChangedEnableFilesInfoEvent>(_onChangedEnableFilesInfoEvent);
+    on<_InitApkInfoEvent>(_onInitApkInfoEvent);
+    on<_OpenFilesApkInfoEvent>(_onOpenFilesApkInfoEvent);
+    on<_UpdateFilesInfoEvent>(_onUpdateFilesInfoEvent);
+    on<_DeleteFilesInfoEvent>(_onDeleteFilesInfoEvent);
+    on<_RenameFilesInfoEvent>(_onRenameFilesInfoEvent);
+    on<_ChangedEnableFilesInfoEvent>(_onChangedEnableFilesInfoEvent);
+    on<_SelectDestPathSettingsEvent>(_onSelectDestPathSettingsEvent);
+    Localiz.l10n.then((l10n) {
+      _S = l10n;
+    });
     add(const ApkInfoEvent.init());
   }
 
@@ -32,20 +37,27 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
 
   final RenameIsolate _renameIsolate;
   final PreferencesRepository _pref;
+  late final AppLocalizations _S;
 
   FutureOr<void> _onInitApkInfoEvent(
-      InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
+      _InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
     final aaptPath = await _pref.getAaptPath();
     if (aaptPath != null) {
       await _renameIsolate.init(SettingsObj(
         aaptPath: aaptPath,
       ));
     }
+    final destPath = await _pref.getDestPath();
+    final copyToFolder = await _pref.getCopyToFolder();
+    emit.call(ApkInfoState.load(
+      destPath: destPath,
+      copyToFolder: copyToFolder,
+    ));
   }
 
   FutureOr<void> _onOpenFilesApkInfoEvent(
-      OpenFilesApkInfoEvent event, Emitter<ApkInfoState> emit) async {
-    logger.d('OpenFilesApkInfoEvent');
+      _OpenFilesApkInfoEvent event, Emitter<ApkInfoState> emit) async {
+    logger.d('_OpenFilesApkInfoEvent');
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['apk'],
@@ -54,7 +66,7 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     );
     emit.call(const ApkInfoState.showProgress());
     if (result != null) {
-      logger.d('OpenFilesApkInfoEvent >> ${result.paths}');
+      logger.d('_OpenFilesApkInfoEvent >> ${result.paths}');
       final paths = result.paths.whereNotNull().toList();
       if (paths.isNotEmpty) {
         final listApkInfo = await _renameIsolate.getApkInfo(paths);
@@ -68,17 +80,17 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
         }
       }
     } else {
-      logger.d('OpenFilesApkInfoEvent >> no select');
+      logger.d('_OpenFilesApkInfoEvent >> no select');
     }
-    emit.call(ApkInfoState.load(
+    emit.call(ApkInfoState.loadApkInfo(
       listInfo: _listInfo,
     ));
   }
 
   FutureOr<void> _onUpdateFilesInfoEvent(
-      UpdateFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+      _UpdateFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
     final pattern = event.replacePattern;
-    logger.d('UpdateFilesInfoEvent pattern >> $pattern');
+    logger.d('_UpdateFilesInfoEvent pattern >> $pattern');
     emit.call(const ApkInfoState.showProgress());
     final list = _listInfo;
     if (list.isNotEmpty) {
@@ -88,46 +100,54 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
         _listInfo.addAll(listInfo);
       }
     }
-    emit.call(ApkInfoState.load(
+    emit.call(ApkInfoState.loadApkInfo(
       listInfo: _listInfo,
     ));
   }
 
   FutureOr<void> _onDeleteFilesInfoEvent(
-      DeleteFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+      _DeleteFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
     final uuid = event.uuid;
-    logger.d('DeleteFilesInfoEvent uuid >> $uuid');
+    logger.d('_DeleteFilesInfoEvent uuid >> $uuid');
     if (uuid == null) return;
     final info = _listInfo.firstWhereOrNull((e) => e.uuid == uuid);
     if (info != null) {
       await _renameIsolate.deleteFileInfo(uuid);
       _listInfo.remove(info);
-      emit.call(ApkInfoState.load(
+      emit.call(ApkInfoState.loadApkInfo(
         listInfo: _listInfo,
       ));
     }
   }
 
   FutureOr<void> _onRenameFilesInfoEvent(
-      RenameFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
-    logger.d('RenameFilesInfoEvent');
+      _RenameFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+    logger.d('_RenameFilesInfoEvent');
+    final copyToFolder = event.copyToFolder??false;
+    await _pref.setCopyToFolder(copyToFolder);
     final list = _listInfo;
     if (list.isNotEmpty) {
-      final listInfo = await _renameIsolate.renameFilesInfo(list);
+      String? destPath;
+      if (copyToFolder && event.destPath?.isNotEmpty == true) {
+        destPath = event.destPath;
+      }
+      final listInfo = await _renameIsolate.renameFilesInfo(list,
+          destPath: destPath,
+      );
       if (listInfo != null) {
         _listInfo.clear();
         _listInfo.addAll(listInfo);
       }
     }
-    emit.call(ApkInfoState.load(
+    emit.call(ApkInfoState.loadApkInfo(
       listInfo: _listInfo,
     ));
   }
 
   FutureOr<void> _onChangedEnableFilesInfoEvent(
-      ChangedEnableFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
+      _ChangedEnableFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
     final uuid = event.uuid;
-    logger.d('ChangedEnableFilesInfoEvent uuid >> $uuid');
+    logger.d('_ChangedEnableFilesInfoEvent uuid >> $uuid');
     for (int i = 0; i < _listInfo.length; i++) {
       final info = _listInfo[i];
       if (info.uuid == uuid) {
@@ -137,8 +157,24 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
         break;
       }
     }
-    emit.call(ApkInfoState.load(
+    emit.call(ApkInfoState.loadApkInfo(
       listInfo: _listInfo,
     ));
+  }
+
+  FutureOr<void> _onSelectDestPathSettingsEvent(
+      _SelectDestPathSettingsEvent event, Emitter<ApkInfoState> emit) async {
+    logger.d('_SelectDestPathSettingsEvent');
+    final destPath = await FilePicker.platform.getDirectoryPath(
+      dialogTitle: _S.select_dest_folder,
+      lockParentWindow: true,
+    );
+    if (destPath != null) {
+      logger.d('_SelectDestPathSettingsEvent >> $destPath');
+      await _pref.setDestPath(destPath);
+      emit.call(ApkInfoState.selectDestPath(
+        destPath: destPath,
+      ));
+    }
   }
 }

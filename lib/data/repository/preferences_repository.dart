@@ -21,4 +21,24 @@ class PreferencesRepository {
     final _prefs = await _prefsFuture;
     return _prefs.setString(PrefKeys.aaptPath, aaptPath);
   }
+
+  Future<String?> getDestPath() async {
+    final _prefs = await _prefsFuture;
+    return _prefs.getString(PrefKeys.destPath);
+  }
+
+  Future<bool> setDestPath(String destPath) async {
+    final _prefs = await _prefsFuture;
+    return _prefs.setString(PrefKeys.destPath, destPath);
+  }
+
+  Future<bool?> getCopyToFolder() async {
+    final _prefs = await _prefsFuture;
+    return _prefs.getBool(PrefKeys.copyToFolder);
+  }
+
+  Future<bool> setCopyToFolder(bool copyToFolder) async {
+    final _prefs = await _prefsFuture;
+    return _prefs.setBool(PrefKeys.copyToFolder, copyToFolder);
+  }
 }

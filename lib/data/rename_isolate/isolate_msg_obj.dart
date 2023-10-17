@@ -43,8 +43,10 @@ class RenameFilesInfo extends IsolateMsgObj {
   RenameFilesInfo({
     required super.sendReturnPort,
     required this.listInfo,
+    this.destPath,
   });
   final List<FileInfo> listInfo;
+  final String? destPath;
 }
 
 class SettingsFilesInfo extends IsolateMsgObj {

@@ -40,7 +40,7 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
           break;
         case RenameFilesInfo():
           renameController
-              .renameFilesInfo(msg.listInfo)
+              .renameFilesInfo(msg.listInfo, destPath: msg.destPath)
               .then((list) => msg.sendReturnPort.send(list));
           break;
         case SettingsFilesInfo():
@@ -148,11 +148,14 @@ class RenameIsolate {
     // }
   }
 
-  Future<List<FileInfo>?> renameFilesInfo(List<FileInfo> listInfo) async {
+  Future<List<FileInfo>?> renameFilesInfo(List<FileInfo> listInfo, {
+    String? destPath,
+  }) async {
     final port = ReceivePort();
     _sendPort?.send(RenameFilesInfo(
       sendReturnPort: port.sendPort,
       listInfo: listInfo,
+      destPath: destPath,
     ));
     final obj = await port.first;
     if (obj is List<FileInfo>?) {

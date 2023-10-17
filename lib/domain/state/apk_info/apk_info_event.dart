@@ -5,17 +5,27 @@ part of 'apk_info_bloc.dart';
   when: FreezedWhenOptions.none,
 )
 class ApkInfoEvent with _$ApkInfoEvent {
-  const factory ApkInfoEvent.init() = InitApkInfoEvent;
-  const factory ApkInfoEvent.openFiles() = OpenFilesApkInfoEvent;
+  const factory ApkInfoEvent.init() = _InitApkInfoEvent;
+
+  const factory ApkInfoEvent.openFiles() = _OpenFilesApkInfoEvent;
+
   const factory ApkInfoEvent.updateFilesInfo({
     required String replacePattern,
-  }) = UpdateFilesInfoEvent;
+  }) = _UpdateFilesInfoEvent;
+
   const factory ApkInfoEvent.deleteFilesInfo({
     required String? uuid,
-  }) = DeleteFilesInfoEvent;
-  const factory ApkInfoEvent.renameFilesInfo() = RenameFilesInfoEvent;
+  }) = _DeleteFilesInfoEvent;
+
+  const factory ApkInfoEvent.renameFilesInfo({
+    String? destPath,
+    bool? copyToFolder,
+  }) = _RenameFilesInfoEvent;
+
   const factory ApkInfoEvent.changedEnable({
     required String? uuid,
     required bool checked,
-  }) = ChangedEnableFilesInfoEvent;
+  }) = _ChangedEnableFilesInfoEvent;
+
+  const factory ApkInfoEvent.selectDestPath() = _SelectDestPathSettingsEvent;
 }

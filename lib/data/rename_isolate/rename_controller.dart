@@ -15,6 +15,9 @@ class RenameController {
   final _parserApkInfo = ParserApkInfo();
   final _parserPattern = ParserReplacePattern();
 
+  final _patternCount = r'_(${#})';
+  final _keyCount = r'${#}';
+
   final List<ApkInfo> _listApkInfo = [];
 
   Future<bool> aaptInit(String? aaptPath) {
@@ -37,8 +40,8 @@ class RenameController {
     return listInfo;
   }
 
-  Future<List<FileInfo>> updateFilesInfo(
-      List<FileInfo> listInfo, String pattern) async {
+  Future<List<FileInfo>> updateFilesInfo(List<FileInfo> listInfo,
+      String pattern) async {
     logger.d('updateFilesInfo pattern >> $pattern');
     if (listInfo.isNotEmpty) {
       final patternInfo = await _parserPattern.parsePattern(pattern);
@@ -50,7 +53,7 @@ class RenameController {
         final info = listInfo[i];
         final ext = p.extension(info.file.path);
         final apkInfo =
-            _listApkInfo.firstWhereOrNull((e) => e.uuid == info.uuid);
+        _listApkInfo.firstWhereOrNull((e) => e.uuid == info.uuid);
         final newFileName = await renamer.createNewName(apkInfo);
         listInfo[i] = info.copyWith(
           newFileName: '$newFileName$ext',
@@ -68,18 +71,62 @@ class RenameController {
     }
   }
 
-  Future<List<FileInfo>?> renameFilesInfo(List<FileInfo> listInfo) async {
+  Future<String> _addFileCount({
+    required String destPath,
+    required String newFileName,
+    required String countPattern,
+  }) async {
+    final filePath = p.join(destPath, newFileName);
+    final fileName = p.basenameWithoutExtension(filePath);
+    final ext = p.extension(filePath);
+    var file = File(filePath);
+    int count = 1;
+    while (await file.exists()) {
+      final suffix = countPattern.replaceAll(_keyCount, count.toString());
+      count++;
+      final name = '$fileName$suffix$ext';
+      final path = p.join(destPath, name);
+      file = File(path);
+    }
+    return file.path;
+  }
+
+  Future<List<FileInfo>?> renameFilesInfo(List<FileInfo> listInfo, {
+    String? destPath,
+  }) async {
     logger.d('renameFilesInfo listInfo >> ${listInfo.length}');
+    final Directory? dest;
+    if (destPath != null) {
+      dest = Directory(destPath);
+      if (!(await dest.exists())) {
+        return listInfo;
+      }
+    }
     for (int i = 0; i < listInfo.length; i++) {
       final info = listInfo[i];
       final file = info.file;
       final newFileName = info.newFileName;
       if (info.isEnable && newFileName != null && await file.exists()) {
-        final newPath = p.join(file.parent.path, newFileName);
-        logger.d('renameFilesInfo newPath >> $newPath');
-        final newFile = await file.rename(newPath);
+        final File newFile;
+        if (destPath != null) {
+          final newPath = await _addFileCount(
+            destPath: destPath,
+            newFileName: newFileName,
+            countPattern: _patternCount,
+          );
+          logger.d('renameFilesInfo copy >> $newPath');
+          newFile = await file.copy(newPath);
+        } else {
+          final newPath = await _addFileCount(
+            destPath: file.parent.path,
+            newFileName: newFileName,
+            countPattern: _patternCount,
+          );
+          logger.d('renameFilesInfo rename >> $newPath');
+          newFile = await file.rename(newPath);
+        }
         listInfo[i] = info.copyWith(
-          currentFileName: newFileName,
+          currentFileName: p.basename(newFile.path),
           file: newFile,
           isEnable: false,
         );
