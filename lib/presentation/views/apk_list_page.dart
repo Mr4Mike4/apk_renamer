@@ -154,6 +154,8 @@ class _ApkListPageState extends State<ApkListPage> {
                         return current.maybeMap(
                           load: (st) {
                             _destPathController.text = st.destPath ?? '';
+                            _replacePatternController.text = st.pattern ?? '';
+                            _copyToFolderController.value = st.copyToFolder??true;
                             return false;
                           },
                           selectDestPath: (st) {

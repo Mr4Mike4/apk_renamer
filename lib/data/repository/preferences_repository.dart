@@ -41,4 +41,14 @@ class PreferencesRepository {
     final _prefs = await _prefsFuture;
     return _prefs.setBool(PrefKeys.copyToFolder, copyToFolder);
   }
+
+  Future<String?> getPattern() async {
+    final _prefs = await _prefsFuture;
+    return _prefs.getString(PrefKeys.pattern);
+  }
+
+  Future<bool> setPattern(String pattern) async {
+    final _prefs = await _prefsFuture;
+    return _prefs.setString(PrefKeys.pattern, pattern);
+  }
 }
