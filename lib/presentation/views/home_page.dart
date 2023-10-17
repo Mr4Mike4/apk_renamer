@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../localizations.dart';
+import 'custom/confirm_dialog.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
@@ -70,33 +71,23 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   }
 
   @override
-  void onWindowClose() async {
-    bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
-      showDialog(
-        context: context,
-        builder: (_) {
-          return ContentDialog(
-            title: const Text('Confirm close'),
-            content: const Text('Are you sure you want to close this window?'),
-            actions: [
-              FilledButton(
-                child: const Text('Yes'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  windowManager.destroy();
-                },
-              ),
-              Button(
-                child: const Text('No'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+  void onWindowClose() {
+    windowManager.isPreventClose().then((isPreventClose) {
+      if (isPreventClose) {
+        showDialog<bool>(
+          context: context,
+          builder: (context) {
+            final S = AppLocal.of(context);
+            return ConfirmDialog(
+              content: S.app_exit_confirm,
+            );
+          },
+        ).then((result) {
+          if (result == true) {
+            windowManager.destroy();
+          }
+        });
+      }
+    });
   }
 }
