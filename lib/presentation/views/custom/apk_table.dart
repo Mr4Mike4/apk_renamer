@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:renamer_lib/model/file_info.dart';
 
-import '../../../data/model/file_info.dart';
 import '../../../localizations.dart';
 import 'apk_table_header.dart';
 import 'apk_table_item.dart';

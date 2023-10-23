@@ -1,6 +1,7 @@
 import 'dart:isolate';
 
-import '../model/file_info.dart';
+import 'package:renamer_lib/model/file_info.dart';
+
 import '../model/settings_obj.dart';
 
 sealed class IsolateMsgObj {

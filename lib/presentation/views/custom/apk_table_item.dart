@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
-import '../../../data/model/file_info.dart';
+import 'package:renamer_lib/model/file_info.dart';
 
 typedef DelFileInfoCallback = void Function(FileInfo fileInfo);
 typedef ChangedEnableFileInfoCallback = void Function(

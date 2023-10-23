@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:apk_renamer/data/repository/parser_apk_info.dart';
 import 'package:apk_renamer/internal/localiz.dart';
 import 'package:bloc/bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:parser_apk_info/repository/parser_apk_info.dart';
 
 import '../../../data/repository/preferences_repository.dart';
 import '../../../logger.dart';

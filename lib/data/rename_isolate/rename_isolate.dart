@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import '../model/apk_info.dart';
-import '../model/file_info.dart';
+import 'package:parser_apk_info/model/apk_info.dart';
+import 'package:renamer_lib/model/file_info.dart';
+import 'package:renamer_lib/repository/rename_controller.dart';
+
 import '../model/settings_obj.dart';
+import 'app_logger.dart';
 import 'isolate_msg_obj.dart';
-import 'rename_controller.dart';
 
 FutureOr<void> _createIsolate(_IsolateInit info) async {
   final receivePort = ReceivePort();
 
-  // final pref = PreferencesRepository();
-  final renameController = RenameController();
+  final renameController = RenameController(AppLogger());
 
   info.sendPort.send(IsolateReturn(
     sendPort: receivePort.sendPort,
@@ -32,7 +33,9 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
         case LoadApkInfo():
           renameController
               .loadApkInfo(msg.paths)
-              .then((list) => msg.sendReturnPort.send(list));
+              .then((_) {
+                msg.sendReturnPort.send(renameController.listApkInfo);
+              });
           break;
         case DeleteFileInfo():
           renameController

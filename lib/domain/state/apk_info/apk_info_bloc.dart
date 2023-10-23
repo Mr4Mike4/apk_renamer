@@ -5,8 +5,8 @@ import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart' as p;
+import 'package:renamer_lib/model/file_info.dart';
 
-import '../../../data/model/file_info.dart';
 import '../../../data/rename_isolate/rename_isolate.dart';
 import '../../../data/repository/preferences_repository.dart';
 import '../../../internal/localiz.dart';
