@@ -33,15 +33,17 @@ void main() async {
     // await flutter_acrylic.Window.initialize();
     // await flutter_acrylic.Window.hideWindowControls();
     await WindowManager.instance.ensureInitialized();
-    windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle(
-        TitleBarStyle.hidden,
-        windowButtonVisibility: false,
-      );
-      await windowManager.setMinimumSize(const Size(500, 600));
+    const windowOptions = WindowOptions(
+      minimumSize: Size(500, 600),
+      center: true,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+      windowButtonVisibility: false,
+    );
+
+    windowManager.waitUntilReadyToShow(windowOptions).then((_) async {
       await windowManager.show();
       await windowManager.setPreventClose(true);
-      await windowManager.setSkipTaskbar(false);
     });
   }
 
