@@ -4,7 +4,7 @@ import 'package:apk_renamer/internal/localiz.dart';
 import 'package:bloc/bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:parser_apk_info/repository/parser_apk_info.dart';
+import 'package:parser_apk_info/repository/aapt_util.dart';
 
 import '../../../data/repository/preferences_repository.dart';
 import '../../../logger.dart';
@@ -42,7 +42,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       dialogTitle: _S.settings_select_aapt_path,
       lockParentWindow: true,
     );
-    final aaptPath = await ParserApkInfo.getAaptApp(aaptDirPath);
+    final aaptPath = await AaptUtil.getAaptApp(aaptDirPath);
     if (aaptPath != null) {
       logger.d('_SelectAaptPathSettingsEvent >> $aaptPath');
       emit.call(SettingsState.selectAaptPath(
