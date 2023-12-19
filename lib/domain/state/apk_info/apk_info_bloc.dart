@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:parser_apk_info/repository/aapt_util.dart';
 import 'package:path/path.dart' as p;
+import 'package:renamer_lib/model/aapt_path_util.dart';
 import 'package:renamer_lib/model/file_info.dart';
 
 import '../../../data/rename_isolate/rename_isolate.dart';
@@ -40,6 +43,14 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
 
   FutureOr<void> _onInitApkInfoEvent(
       _InitApkInfoEvent event, Emitter<ApkInfoState> emit) async {
+    final aaptDirPath = AaptPathUtil.getAaptApp(kDebugMode);
+    final aaptPath = await AaptUtil.getAaptApp(aaptDirPath);
+    if (aaptPath == null) {
+      emit.call(ApkInfoState.fatalError(
+        error: _S.error_aapt_not_found,
+      ));
+      return;
+    }
     final destPath = await _pref.getDestPath();
     final copyToFolder = await _pref.getCopyToFolder();
     final pattern = await _pref.getPattern();

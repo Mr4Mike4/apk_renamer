@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logger/logger.dart' as l;
+import 'package:parser_apk_info/repository/aapt_util.dart';
+import 'package:renamer_lib/model/aapt_path_util.dart';
 
 import '../data/model/settings_obj.dart';
 import '../data/rename_isolate/rename_isolate.dart';
@@ -21,8 +23,8 @@ class AppAssembly {
       ..registerSingleton((di) => RenameIsolate());
 
     final renameIsolate = container.resolve<RenameIsolate>();
-    final pref = container.resolve<PreferencesRepository>();
-    final aaptPath = await pref.getAaptPath();
+    final aaptDirPath = AaptPathUtil.getAaptApp(kDebugMode);
+    final aaptPath = await AaptUtil.getAaptApp(aaptDirPath);
     if (aaptPath != null) {
       await renameIsolate.init(SettingsObj(
         aaptPath: aaptPath,

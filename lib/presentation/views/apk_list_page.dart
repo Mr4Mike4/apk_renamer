@@ -1,14 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:renamer_lib/model/file_info.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 import '../../localizations.dart';
 import 'custom/apk_table.dart';
 import 'custom/checkbox_row.dart';
 import 'custom/confirm_dialog.dart';
+import 'custom/error_dialog.dart';
 import 'custom/input_text_field.dart';
 
 class ApkListPage extends StatefulWidget {
@@ -51,6 +52,21 @@ class _ApkListPageState extends State<ApkListPage> {
         _bloc.add(ApkInfoEvent.deleteFilesInfo(
           uuid: fileInfo.uuid,
         ));
+      }
+    });
+  }
+
+  void _showError(String error, {bool isFatal = false}) {
+    showDialog<bool>(
+      context: context,
+      builder: (_) {
+        return ErrorDialog(
+          content: error,
+        );
+      },
+    ).then((_) {
+      if (isFatal) {
+        windowManager.destroy();
       }
     });
   }
@@ -128,15 +144,15 @@ class _ApkListPageState extends State<ApkListPage> {
                       child: Text(S.btn_rename_files),
                     ),
                   ),
-                  Align(
-                    alignment: AlignmentDirectional.bottomStart,
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                          icon: const Icon(FluentIcons.settings, size: 24.0),
-                          onPressed: () => context.push('/settings'),
-                        )),
-                  ),
+                  // Align(
+                  //   alignment: AlignmentDirectional.bottomStart,
+                  //   child: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: IconButton(
+                  //         icon: const Icon(FluentIcons.settings, size: 24.0),
+                  //         onPressed: () => context.push('/settings'),
+                  //       )),
+                  // ),
                 ],
               ),
             ),
@@ -156,6 +172,10 @@ class _ApkListPageState extends State<ApkListPage> {
                             _destPathController.text = st.destPath ?? '';
                             _replacePatternController.text = st.pattern ?? '';
                             _copyToFolderController.value = st.copyToFolder??true;
+                            return false;
+                          },
+                          fatalError: (st) {
+                            _showError(st.error, isFatal: true);
                             return false;
                           },
                           selectDestPath: (st) {

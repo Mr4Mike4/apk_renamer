@@ -36,5 +36,6 @@
   "settings_aapt_path": "Путь к aapt2",
   "settings_select_aapt_path": "Выберете папку с aapt2",
 
-  "error_aapt_path": "Выберете корректный путь к aapt2"
+  "error_aapt_path": "Выберете корректный путь к aapt2",
+  "error_aapt_not_found": "aapt2 не найден"
 }
