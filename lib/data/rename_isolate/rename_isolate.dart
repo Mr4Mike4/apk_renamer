@@ -33,9 +33,7 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
         case LoadApkInfo():
           renameController
               .loadApkInfo(msg.paths)
-              .then((_) {
-                msg.sendReturnPort.send(renameController.listApkInfo);
-              });
+              .then((list) => msg.sendReturnPort.send(list));
           break;
         case DeleteFileInfo():
           renameController
