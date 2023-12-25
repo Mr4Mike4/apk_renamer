@@ -4,13 +4,16 @@ import 'package:kiwi/kiwi.dart';
 import 'package:renamer_lib/model/file_info.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../domain/model/tag_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
+import '../../domain/state/help_tags/help_tags_bloc.dart';
 import '../../localizations.dart';
 import 'custom/apk_table.dart';
 import 'custom/checkbox_row.dart';
 import 'custom/confirm_dialog.dart';
 import 'custom/error_dialog.dart';
 import 'custom/input_text_field.dart';
+import 'custom/pattern_widget.dart';
 
 class ApkListPage extends StatefulWidget {
   const ApkListPage({
@@ -23,6 +26,7 @@ class ApkListPage extends StatefulWidget {
 
 class _ApkListPageState extends State<ApkListPage> {
   late ApkInfoBloc _bloc;
+  late HelpTagsBloc _blocHelpTags;
 
   final _replacePatternController = TextEditingController();
   final _destPathController = TextEditingController();
@@ -36,6 +40,16 @@ class _ApkListPageState extends State<ApkListPage> {
       di.resolve(),
       di.resolve(),
     );
+    _blocHelpTags = HelpTagsBloc()
+    ..add(const HelpTagsEvent.started());
+  }
+
+  @override
+  void dispose() {
+    _replacePatternController.dispose();
+    _destPathController.dispose();
+    _copyToFolderController.dispose();
+    super.dispose();
   }
 
   void _deleteItem(FileInfo fileInfo) {
@@ -99,15 +113,27 @@ class _ApkListPageState extends State<ApkListPage> {
         children: [
           Expanded(
             child: SizedBox(
-              width: 400,
+              width: 440,
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InputTextField(
-                      labelText: S.file_name_mask,
-                      controller: _replacePatternController,
-                    ),
+                  BlocBuilder<HelpTagsBloc, HelpTagsState>(
+                    bloc: _blocHelpTags,
+                    builder: (context, state) {
+                      List<TagInfo>? dateTimeHelp;
+                      List<TagInfo>? apkHelp;
+                      state.mapOrNull(load: (st){
+                        dateTimeHelp = st.dateTimeHelp;
+                        apkHelp = st.apkHelp;
+                      });
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: PatternWidget(
+                          controller: _replacePatternController,
+                          dateTimeHelp: dateTimeHelp,
+                          apkHelp: apkHelp,
+                        ),
+                      );
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -171,7 +197,8 @@ class _ApkListPageState extends State<ApkListPage> {
                           load: (st) {
                             _destPathController.text = st.destPath ?? '';
                             _replacePatternController.text = st.pattern ?? '';
-                            _copyToFolderController.value = st.copyToFolder??true;
+                            _copyToFolderController.value =
+                                st.copyToFolder ?? true;
                             return false;
                           },
                           fatalError: (st) {
@@ -187,15 +214,17 @@ class _ApkListPageState extends State<ApkListPage> {
                       },
                       builder: (context, state) {
                         return state.maybeWhen(
-                          loadApkInfo: (listInfo) => ApkTable(
-                            key: const Key('apk_table'),
-                            listInfo: listInfo,
-                            onDeleteItem: _deleteItem,
-                            onChangedEnable: _changedEnable,
-                          ),
+                          loadApkInfo: (listInfo) =>
+                              ApkTable(
+                                key: const Key('apk_table'),
+                                listInfo: listInfo,
+                                onDeleteItem: _deleteItem,
+                                onChangedEnable: _changedEnable,
+                              ),
                           showProgress: () =>
-                              const Center(child: ProgressRing()),
-                          orElse: () => const ApkTable(
+                          const Center(child: ProgressRing()),
+                          orElse: () =>
+                          const ApkTable(
                             key: Key('apk_table'),
                           ),
                         );

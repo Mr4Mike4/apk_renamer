@@ -37,5 +37,34 @@
   "settings_select_aapt_path": "Выберете папку с aapt2",
 
   "error_aapt_path": "Выберете корректный путь к aapt2",
-  "error_aapt_not_found": "aapt2 не найден"
+  "error_aapt_not_found": "aapt2 не найден",
+
+  "tag_submenu_date_time": "Дата и время",
+  "tag_date_time_full_year": "Год, представленный полными четырьмя или пятью цифрами, в зависимости от используемого календаря.",
+  "tag_date_time_year_last_two_digits": "Год, представленный только двумя последними цифрами. Для однозначных лет добавляется ведущий ноль.",
+  "tag_date_time_month_name": "Название месяца.",
+  "tag_date_time_month_digit_zero": "Месяц в виде цифр с ведущими нулями для однозначных месяцев.",
+  "tag_date_time_month_digit": "Месяц в виде цифр без ведущих нулей для однозначных месяцев.",
+  "tag_date_time_day_digit_zero": "День месяца в виде цифр с ведущими нулями для однозначных дней.",
+  "tag_date_time_day_digit": "День месяца в виде цифр без ведущих нулей для однозначных дней.",
+  "tag_date_time_hours_zero": "Часы с ведущими нулями для однозначных часов.",
+  "tag_date_time_minutes_zero": "Минуты с ведущими нулями для однозначных минут.",
+  "tag_date_time_minutes": "Минуты без ведущих нулей для однозначных минут.",
+  "tag_date_time_seconds_zero": "Секунды с ведущими нулями для однозначных секунд.",
+  "tag_date_time_seconds": "Секунды без ведущих нулей для однозначных секунд.",
+  "tag_date_time_milli_seconds_3d": "Миллисекунды, представленные полными тремя цифрами.",
+  "tag_date_time_milli_seconds_1d": "Миллисекунды, представленные только первой цифрой.",
+
+  "tag_submenu_apk": "APK",
+  "tag_orig_name": "Имя",
+  "tag_apk_application_id": "Идентификатор приложения",
+  "tag_apk_version_code": "Код версии",
+  "tag_apk_version_name": "Имя версии",
+  "tag_apk_platform_build_version_name": "Имя версии сборки платформы",
+  "tag_apk_platform_build_version_code": "Код версии сборки платформы",
+  "tag_apk_compile_sdk_version": "Код версии sdk которым собрано приложение",
+  "tag_apk_compile_sdk_version_codename": "Имя версии sdk которым собрано приложение",
+  "tag_apk_sdk_version": "Версия sdk",
+  "tag_apk_target_sdk_version": "Целевая версия sdk",
+  "tag_apk_application_label": "Ярлык приложения"
 }
