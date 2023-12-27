@@ -41,8 +41,7 @@ class _ApkListPageState extends State<ApkListPage> {
       di.resolve(),
       di.resolve(),
     );
-    _blocHelpTags = HelpTagsBloc()
-    ..add(const HelpTagsEvent.started());
+    _blocHelpTags = HelpTagsBloc()..add(const HelpTagsEvent.started());
   }
 
   @override
@@ -109,80 +108,81 @@ class _ApkListPageState extends State<ApkListPage> {
       // header: const PageHeader(
       //   title: Text('Fluent UI for Flutter Showcase App'),
       // ),
-      content: VerticalSplitView(
-        ratio: 0.4,
-        minWidthLeft: 300,
-        minWidthRight: 300,
-        left: Column(
-          children: [
-            BlocBuilder<HelpTagsBloc, HelpTagsState>(
-              bloc: _blocHelpTags,
-              builder: (context, state) {
-                List<TagInfo>? dateTimeHelp;
-                List<TagInfo>? apkHelp;
-                state.mapOrNull(load: (st){
-                  dateTimeHelp = st.dateTimeHelp;
-                  apkHelp = st.apkHelp;
-                });
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PatternWidget(
+      content: Padding(
+        padding: const EdgeInsets.only(
+          left: 8.0,
+          right: 8.0,
+          bottom: 8.0,
+        ),
+        child: VerticalSplitView(
+          ratio: 0.4,
+          minWidthLeft: 300,
+          minWidthRight: 300,
+          left: Column(
+            children: [
+              BlocBuilder<HelpTagsBloc, HelpTagsState>(
+                bloc: _blocHelpTags,
+                builder: (context, state) {
+                  List<TagInfo>? dateTimeHelp;
+                  List<TagInfo>? apkHelp;
+                  state.mapOrNull(load: (st) {
+                    dateTimeHelp = st.dateTimeHelp;
+                    apkHelp = st.apkHelp;
+                  });
+                  return PatternWidget(
                     controller: _replacePatternController,
                     dateTimeHelp: dateTimeHelp,
                     apkHelp: apkHelp,
-                  ),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FilledButton(
-                onPressed: () {
-                  _bloc.add(const ApkInfoEvent.openFiles());
+                  );
                 },
-                child: Text(S.btn_add_files),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FilledButton(
-                onPressed: () {
-                  _bloc.add(ApkInfoEvent.updateFilesInfo(
-                    replacePattern: _replacePatternController.text,
-                  ));
-                },
-                child: Text(S.btn_preview),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FilledButton(
+                  onPressed: () {
+                    _bloc.add(const ApkInfoEvent.openFiles());
+                  },
+                  child: Text(S.btn_add_files),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CheckBoxRow(
-                text: S.copy_to_folder,
-                checkboxController: _copyToFolderController,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FilledButton(
+                  onPressed: () {
+                    _bloc.add(ApkInfoEvent.updateFilesInfo(
+                      replacePattern: _replacePatternController.text,
+                    ));
+                  },
+                  child: Text(S.btn_preview),
+                ),
               ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FilledButton(
-                onPressed: _renameFiles,
-                child: Text(S.btn_rename_files),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CheckBoxRow(
+                  text: S.copy_to_folder,
+                  checkboxController: _copyToFolderController,
+                ),
               ),
-            ),
-            // Align(
-            //   alignment: AlignmentDirectional.bottomStart,
-            //   child: Padding(
-            //       padding: const EdgeInsets.all(8.0),
-            //       child: IconButton(
-            //         icon: const Icon(FluentIcons.settings, size: 24.0),
-            //         onPressed: () => context.push('/settings'),
-            //       )),
-            // ),
-          ],
-        ),
-        right: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FilledButton(
+                  onPressed: _renameFiles,
+                  child: Text(S.btn_rename_files),
+                ),
+              ),
+              // Align(
+              //   alignment: AlignmentDirectional.bottomStart,
+              //   child: Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: IconButton(
+              //         icon: const Icon(FluentIcons.settings, size: 24.0),
+              //         onPressed: () => context.push('/settings'),
+              //       )),
+              // ),
+            ],
+          ),
+          right: Column(
             children: [
               Expanded(
                 child: BlocBuilder<ApkInfoBloc, ApkInfoState>(
@@ -192,8 +192,7 @@ class _ApkListPageState extends State<ApkListPage> {
                       load: (st) {
                         _destPathController.text = st.destPath ?? '';
                         _replacePatternController.text = st.pattern ?? '';
-                        _copyToFolderController.value =
-                            st.copyToFolder ?? true;
+                        _copyToFolderController.value = st.copyToFolder ?? true;
                         return false;
                       },
                       fatalError: (st) {
@@ -209,17 +208,14 @@ class _ApkListPageState extends State<ApkListPage> {
                   },
                   builder: (context, state) {
                     return state.maybeWhen(
-                      loadApkInfo: (listInfo) =>
-                          ApkTable(
-                            key: const Key('apk_table'),
-                            listInfo: listInfo,
-                            onDeleteItem: _deleteItem,
-                            onChangedEnable: _changedEnable,
-                          ),
-                      showProgress: () =>
-                      const Center(child: ProgressRing()),
-                      orElse: () =>
-                      const ApkTable(
+                      loadApkInfo: (listInfo) => ApkTable(
+                        key: const Key('apk_table'),
+                        listInfo: listInfo,
+                        onDeleteItem: _deleteItem,
+                        onChangedEnable: _changedEnable,
+                      ),
+                      showProgress: () => const Center(child: ProgressRing()),
+                      orElse: () => const ApkTable(
                         key: Key('apk_table'),
                       ),
                     );
@@ -248,8 +244,7 @@ class _ApkListPageState extends State<ApkListPage> {
                           Button(
                             child: Text(S.btn_select),
                             onPressed: () {
-                              _bloc
-                                  .add(const ApkInfoEvent.selectDestPath());
+                              _bloc.add(const ApkInfoEvent.selectDestPath());
                             },
                           ),
                         ],
