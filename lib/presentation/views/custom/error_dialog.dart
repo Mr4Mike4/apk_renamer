@@ -5,11 +5,11 @@ import '../../../localizations.dart';
 
 class ErrorDialog extends StatelessWidget {
   const ErrorDialog({
-    Key? key,
+    super.key,
     this.title,
     this.content,
     this.btnYes,
-  }) : super(key: key);
+  });
 
   final String? title;
   final String? content;

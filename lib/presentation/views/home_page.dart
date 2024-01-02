@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> with WindowListener {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
-    final theme = FluentTheme.of(context);
+    // final theme = FluentTheme.of(context);
     if (widget.shellContext != null) {
       if (context.canPop() == false) {
         setState(() {});

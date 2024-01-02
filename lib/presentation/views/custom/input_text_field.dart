@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class InputTextField extends StatelessWidget {
   const InputTextField({
-    Key? key,
+    super.key,
     required this.labelText,
     this.controller,
     this.focusNode,
@@ -13,7 +13,7 @@ class InputTextField extends StatelessWidget {
     this.obscureText = false,
     this.inputFormatters,
     this.maxLines = 1,
-  }) : super(key: key);
+  });
 
   final String labelText;
   final TextEditingController? controller;

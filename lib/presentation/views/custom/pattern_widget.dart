@@ -142,7 +142,7 @@ class TextHelpRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           width: tagWidth,
           child: Text(
-            info.tag ?? '',
+            info.tag,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class TextHelpRow extends StatelessWidget {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            info.text ?? '',
+            info.text,
             softWrap: false,
           ),
         ),

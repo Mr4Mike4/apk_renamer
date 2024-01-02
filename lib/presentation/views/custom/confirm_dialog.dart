@@ -5,12 +5,12 @@ import '../../../localizations.dart';
 
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog({
-    Key? key,
+    super.key,
     this.title,
     this.content,
     this.btnYes,
     this.btnCancel,
-  }) : super(key: key);
+  });
 
   final String? title;
   final String? content;

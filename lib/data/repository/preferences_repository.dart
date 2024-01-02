@@ -13,42 +13,42 @@ class PreferencesRepository {
   }
 
   Future<String?> getAaptPath() async {
-    final _prefs = await _prefsFuture;
-    return _prefs.getString(PrefKeys.aaptPath);
+    final prefs = await _prefsFuture;
+    return prefs.getString(PrefKeys.aaptPath);
   }
 
   Future<bool> setAaptPath(String aaptPath) async {
-    final _prefs = await _prefsFuture;
-    return _prefs.setString(PrefKeys.aaptPath, aaptPath);
+    final prefs = await _prefsFuture;
+    return prefs.setString(PrefKeys.aaptPath, aaptPath);
   }
 
   Future<String?> getDestPath() async {
-    final _prefs = await _prefsFuture;
-    return _prefs.getString(PrefKeys.destPath);
+    final prefs = await _prefsFuture;
+    return prefs.getString(PrefKeys.destPath);
   }
 
   Future<bool> setDestPath(String destPath) async {
-    final _prefs = await _prefsFuture;
-    return _prefs.setString(PrefKeys.destPath, destPath);
+    final prefs = await _prefsFuture;
+    return prefs.setString(PrefKeys.destPath, destPath);
   }
 
   Future<bool?> getCopyToFolder() async {
-    final _prefs = await _prefsFuture;
-    return _prefs.getBool(PrefKeys.copyToFolder);
+    final prefs = await _prefsFuture;
+    return prefs.getBool(PrefKeys.copyToFolder);
   }
 
   Future<bool> setCopyToFolder(bool copyToFolder) async {
-    final _prefs = await _prefsFuture;
-    return _prefs.setBool(PrefKeys.copyToFolder, copyToFolder);
+    final prefs = await _prefsFuture;
+    return prefs.setBool(PrefKeys.copyToFolder, copyToFolder);
   }
 
   Future<String?> getPattern() async {
-    final _prefs = await _prefsFuture;
-    return _prefs.getString(PrefKeys.pattern);
+    final prefs = await _prefsFuture;
+    return prefs.getString(PrefKeys.pattern);
   }
 
   Future<bool> setPattern(String pattern) async {
-    final _prefs = await _prefsFuture;
-    return _prefs.setString(PrefKeys.pattern, pattern);
+    final prefs = await _prefsFuture;
+    return prefs.setString(PrefKeys.pattern, pattern);
   }
 }

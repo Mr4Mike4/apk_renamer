@@ -36,7 +36,7 @@ class ApkTableItem extends StatelessWidget {
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: Text(fileInfo.currentFileName ?? ''),
+            child: Text(fileInfo.currentFileName),
           ),
           Flexible(
             fit: FlexFit.tight,

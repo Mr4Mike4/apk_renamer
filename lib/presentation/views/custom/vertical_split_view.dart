@@ -43,9 +43,11 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
 
   void _dragUpdate(DragUpdateDetails details) {
     var ratio = _ratio + (details.delta.dx / _maxWidth);
-    if (ratio > 1)
+    if (ratio > 1) {
       ratio = 1;
-    else if (ratio < 0.0) ratio = 0.0;
+    } else if (ratio < 0.0) {
+      ratio = 0.0;
+    }
     final widthLeft = _getWidthLeft(ratio);
     final widthRight = _getWidthRight(ratio);
     if (widthLeft >= widget.minWidthLeft &&

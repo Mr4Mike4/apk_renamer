@@ -6,7 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:parser_apk_info/repository/aapt_util.dart';
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path;
 import 'package:renamer_lib/model/aapt_path_util.dart';
 import 'package:renamer_lib/model/file_info.dart';
 
@@ -79,7 +79,7 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
         final listInfo = listApkInfo?.map((e) => FileInfo(
               uuid: e.uuid,
               file: e.file,
-              currentFileName: p.basename(e.file.path),
+              currentFileName: path.basename(e.file.path),
             ));
         if (listInfo != null) {
           _listInfo.addAll(listInfo);
