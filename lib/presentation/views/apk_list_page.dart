@@ -1,9 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:renamer_lib/model/file_info.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../domain/model/pattern_info.dart';
 import '../../domain/model/tag_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 import '../../domain/state/help_tags/help_tags_bloc.dart';
@@ -33,6 +35,10 @@ class _ApkListPageState extends State<ApkListPage> {
   final _destPathController = TextEditingController();
   final _copyToFolderController = ValueNotifier<bool?>(true);
 
+  List<TagInfo>? dateTimeHelp;
+  List<TagInfo>? apkHelp;
+  List<PatternInfo>? myPatterns;
+
   @override
   void initState() {
     super.initState();
@@ -41,7 +47,8 @@ class _ApkListPageState extends State<ApkListPage> {
       di.resolve(),
       di.resolve(),
     );
-    _blocHelpTags = HelpTagsBloc()..add(const HelpTagsEvent.started());
+    _blocHelpTags = HelpTagsBloc(di.resolve())
+      ..add(const HelpTagsEvent.started());
   }
 
   @override
@@ -49,6 +56,8 @@ class _ApkListPageState extends State<ApkListPage> {
     _replacePatternController.dispose();
     _destPathController.dispose();
     _copyToFolderController.dispose();
+    _bloc.close();
+    _blocHelpTags.close();
     super.dispose();
   }
 
@@ -99,6 +108,17 @@ class _ApkListPageState extends State<ApkListPage> {
     ));
   }
 
+  void _onSavePatternDialog() {
+    context.push<String>('/pattern_name').then((patternName) {
+      if (patternName != null) {
+        _blocHelpTags.add(HelpTagsEvent.savePattern(
+          name: patternName,
+          pattern: _replacePatternController.text,
+        ));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasFluentTheme(context));
@@ -123,16 +143,22 @@ class _ApkListPageState extends State<ApkListPage> {
               BlocBuilder<HelpTagsBloc, HelpTagsState>(
                 bloc: _blocHelpTags,
                 builder: (context, state) {
-                  List<TagInfo>? dateTimeHelp;
-                  List<TagInfo>? apkHelp;
-                  state.mapOrNull(load: (st) {
-                    dateTimeHelp = st.dateTimeHelp;
-                    apkHelp = st.apkHelp;
-                  });
+                  state.mapOrNull(
+                    load: (st) {
+                      dateTimeHelp = st.dateTimeHelp;
+                      apkHelp = st.apkHelp;
+                      myPatterns = st.myPatterns;
+                    },
+                    updatePatterns: (st) {
+                      myPatterns = st.myPatterns;
+                    },
+                  );
                   return PatternWidget(
                     controller: _replacePatternController,
+                    onSavePattern: _onSavePatternDialog,
                     dateTimeHelp: dateTimeHelp,
                     apkHelp: apkHelp,
+                    myPatterns: myPatterns,
                   );
                 },
               ),

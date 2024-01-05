@@ -25,6 +25,14 @@ final _router = GoRouter(
           name: 'settings',
           builder: (context, state) => const SettingsPage(),
         ),
+        GoRoute(
+          path: '/pattern_name',
+          name: 'PatternName',
+          pageBuilder: (context, state) => DialogPage<String>(
+            key: state.pageKey,
+            child: PatternNameDialog(),
+          ),
+        ),
       ],
     ),
   ],

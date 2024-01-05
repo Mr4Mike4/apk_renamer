@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:system_theme/system_theme.dart';
 
 import '../localizations.dart';
+import '../presentation/views/custom/dialog_page.dart';
+import '../presentation/views/custom/pattern_name_dialog.dart';
 import '../presentation/views/home_page.dart';
 import '../presentation/views/settings_page.dart';
 

@@ -17,7 +17,7 @@
 
   "table_column_name": "Исходное имя",
   "table_column_new_name": "Новое имя",
-  "file_name_mask": "Маска для имени файла",
+  "file_name_pattern": "Шаблон для имени файла",
   "file_delete_confirm": "Вы действительно хотите удалить \"{fileName}\" из списка?",
   "@file_delete_confirm": {
     "placeholders": {
@@ -31,6 +31,10 @@
   "select_dest_folder": "Выберете папку в которую будут скопированы файлы",
   "copy_to_folder": "Скопировать файлы",
   "app_exit_confirm": "Вы действительно хотите закрыть приложение?",
+
+  "menu_save_pattern": "Сохранить шаблон",
+  "menu_my_patterns": "Mои шаблоны",
+  "pattern_name": "Название шаблона",
 
   "settings_title": "Настройки",
   "settings_aapt_path": "Путь к aapt2",
