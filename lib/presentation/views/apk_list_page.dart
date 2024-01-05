@@ -79,6 +79,24 @@ class _ApkListPageState extends State<ApkListPage> {
     });
   }
 
+  void _deletePattern(PatternInfo info) {
+    final S = AppLocal.of(context);
+    showDialog<bool>(
+      context: context,
+      builder: (_) {
+        return ConfirmDialog(
+          content: S.pattern_delete_confirm(info.name),
+        );
+      },
+    ).then((result) {
+      if (result == true) {
+        _blocHelpTags.add(HelpTagsEvent.deletePattern(
+          id: info.id,
+        ));
+      }
+    });
+  }
+
   void _showError(String error, {bool isFatal = false}) {
     showDialog<bool>(
       context: context,
@@ -156,6 +174,7 @@ class _ApkListPageState extends State<ApkListPage> {
                   return PatternWidget(
                     controller: _replacePatternController,
                     onSavePattern: _onSavePatternDialog,
+                    onDeletePattern: _deletePattern,
                     dateTimeHelp: dateTimeHelp,
                     apkHelp: apkHelp,
                     myPatterns: myPatterns,

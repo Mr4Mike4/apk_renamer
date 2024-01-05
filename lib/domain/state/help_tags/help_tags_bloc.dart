@@ -28,9 +28,7 @@ class HelpTagsBloc extends Bloc<HelpTagsEvent, HelpTagsState> {
   final Isar _isar;
   final HelpTags _helpTags = HelpTags();
 
-  FutureOr<void> _onStartedHelpTagsEvent(
-      _StartedHelpTagsEvent event, Emitter<HelpTagsState> emit) async {
-    _helpTags.init(_S);
+  Future<List<PatternInfo>> _loadPattern() async {
     final patternDaos = await _isar.patternDaos
         .where()
         .sortByName()
@@ -38,9 +36,23 @@ class HelpTagsBloc extends Bloc<HelpTagsEvent, HelpTagsState> {
     final myPatterns = patternDaos
         .map((e) => e.toModel())
         .toList(growable: false);
+    return myPatterns;
+  }
+
+  FutureOr<void> _onStartedHelpTagsEvent(
+      _StartedHelpTagsEvent event, Emitter<HelpTagsState> emit) async {
+    _helpTags.init(_S);
+    final myPatterns = await _loadPattern();
     emit.call(HelpTagsState.load(
       dateTimeHelp: _helpTags.dateTimeHelp,
       apkHelp: _helpTags.apkHelp,
+      myPatterns: myPatterns,
+    ));
+  }
+
+  Future<void> _updatePatterns(Emitter<HelpTagsState> emit) async {
+    final myPatterns = await _loadPattern();
+    emit.call(HelpTagsState.updatePatterns(
       myPatterns: myPatterns,
     ));
   }
@@ -59,16 +71,7 @@ class HelpTagsBloc extends Bloc<HelpTagsEvent, HelpTagsState> {
     await _isar.writeTxn(() async {
       await _isar.patternDaos.put(pattern);
     });
-    final patternDaos = await _isar.patternDaos
-        .where()
-        .sortByName()
-        .findAll();
-    final myPatterns = patternDaos
-        .map((e) => e.toModel())
-        .toList(growable: false);
-    emit.call(HelpTagsState.updatePatterns(
-      myPatterns: myPatterns,
-    ));
+    await _updatePatterns(emit);
   }
 
   FutureOr<void> _onDeleteHelpTagsEvent(
@@ -77,5 +80,6 @@ class HelpTagsBloc extends Bloc<HelpTagsEvent, HelpTagsState> {
     await _isar.writeTxn(() async {
       await _isar.patternDaos.delete(id);
     });
+    await _updatePatterns(emit);
   }
 }

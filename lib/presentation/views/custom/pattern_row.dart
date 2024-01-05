@@ -6,9 +6,11 @@ class PatternRow extends StatelessWidget {
   const PatternRow({
     super.key,
     required this.info,
+    this.onDelete,
   });
 
   final PatternInfo info;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,7 @@ class PatternRow extends StatelessWidget {
       displayHorizontally: true,
       useMousePosition: false,
       style: const TooltipThemeData(preferBelow: true),
-      child: Text(
-        info.name,
-      ),
+      child: Text(info.name),
     );
   }
 }

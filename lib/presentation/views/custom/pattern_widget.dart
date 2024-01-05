@@ -8,7 +8,7 @@ import 'input_text_field.dart';
 import 'pattern_row.dart';
 import 'text_help_row.dart';
 
-typedef PatternInfoCallback = void Function(PatternInfo duration);
+typedef PatternInfoCallback = void Function(PatternInfo info);
 
 class PatternWidget extends StatelessWidget {
   PatternWidget({
@@ -18,10 +18,12 @@ class PatternWidget extends StatelessWidget {
     this.dateTimeHelp,
     this.apkHelp,
     this.myPatterns,
+    this.onDeletePattern,
   });
 
   final TextEditingController? controller;
   final VoidCallback? onSavePattern;
+  final PatternInfoCallback? onDeletePattern;
   final List<TagInfo>? dateTimeHelp;
   final List<TagInfo>? apkHelp;
   final List<PatternInfo>? myPatterns;
@@ -56,6 +58,7 @@ class PatternWidget extends StatelessWidget {
       navigatorKey: rootNavigatorKey.currentState,
       builder: (context) {
         final S = AppLocal.of(context);
+        final size = Flyout.of(context).size;
         return MenuFlyout(
           items: [
             MenuFlyoutSubItem(
@@ -101,19 +104,32 @@ class PatternWidget extends StatelessWidget {
             ),
             MenuFlyoutSubItem(
               text: Text(S.menu_my_patterns),
-              items: (_) =>
-                  myPatterns?.map((item) {
-                    return MenuFlyoutItem(
-                      text: PatternRow(
-                        info: item,
-                      ),
-                      onPressed: () {
-                        _onSelectPattern(item);
-                        Flyout.of(context).close;
-                      },
-                    );
-                  }).toList(growable: false) ??
-                  [],
+              items: (context) {
+                return myPatterns?.map((item) {
+                      return MenuFlyoutItem(
+                        text: SizedBox(
+                          width: size.isEmpty ? null : size.width,
+                          child: PatternRow(
+                            info: item,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(FluentIcons.delete, size: 18.0),
+                          onPressed: () {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              onDeletePattern?.call(item);
+                            });
+                            Navigator.of(context).maybePop();
+                          },
+                        ),
+                        onPressed: () {
+                          _onSelectPattern(item);
+                          Flyout.of(context).close;
+                        },
+                      );
+                    }).toList(growable: false) ??
+                    [];
+              },
             ),
           ],
         );

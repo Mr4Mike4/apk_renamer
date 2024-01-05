@@ -35,6 +35,15 @@
   "menu_save_pattern": "Сохранить шаблон",
   "menu_my_patterns": "Mои шаблоны",
   "pattern_name": "Название шаблона",
+  "pattern_delete_confirm": "Вы действительно хотите удалить шаблон \"{patternName}\" из списка?",
+  "@pattern_delete_confirm": {
+    "placeholders": {
+      "patternName": {
+        "type": "String",
+        "example": "app"
+      }
+    }
+  },
 
   "settings_title": "Настройки",
   "settings_aapt_path": "Путь к aapt2",
