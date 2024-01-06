@@ -1,54 +1,45 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/pref_keys.dart';
+import 'database_config_repository.dart';
 
 class PreferencesRepository {
-  final Future<SharedPreferences> _prefsFuture =
-      SharedPreferences.getInstance();
 
-  Future<SharedPreferences> get prefsFuture => _prefsFuture;
+  PreferencesRepository(this._databaseConfig);
 
-  static void init() {
-    SharedPreferences.setPrefix('apk');
-  }
+  final DatabaseConfigRepository _databaseConfig;
 
-  Future<String?> getAaptPath() async {
-    final prefs = await _prefsFuture;
-    return prefs.getString(PrefKeys.aaptPath);
+  Future<String?> getAaptPath() {
+    return _databaseConfig.getStringOrNull(PrefKeys.aaptPath);
   }
 
   Future<bool> setAaptPath(String aaptPath) async {
-    final prefs = await _prefsFuture;
-    return prefs.setString(PrefKeys.aaptPath, aaptPath);
+    final result = await _databaseConfig.setString(PrefKeys.aaptPath, aaptPath);
+    return result != null;
   }
 
   Future<String?> getDestPath() async {
-    final prefs = await _prefsFuture;
-    return prefs.getString(PrefKeys.destPath);
+    return _databaseConfig.getStringOrNull(PrefKeys.destPath);
   }
 
   Future<bool> setDestPath(String destPath) async {
-    final prefs = await _prefsFuture;
-    return prefs.setString(PrefKeys.destPath, destPath);
+    final result = await _databaseConfig.setString(PrefKeys.destPath, destPath);
+    return result != null;
   }
 
   Future<bool?> getCopyToFolder() async {
-    final prefs = await _prefsFuture;
-    return prefs.getBool(PrefKeys.copyToFolder);
+    return _databaseConfig.getBool(PrefKeys.copyToFolder, false);
   }
 
   Future<bool> setCopyToFolder(bool copyToFolder) async {
-    final prefs = await _prefsFuture;
-    return prefs.setBool(PrefKeys.copyToFolder, copyToFolder);
+    final result = await _databaseConfig.setBool(PrefKeys.copyToFolder, copyToFolder);
+    return result != null;
   }
 
   Future<String?> getPattern() async {
-    final prefs = await _prefsFuture;
-    return prefs.getString(PrefKeys.pattern);
+    return _databaseConfig.getStringOrNull(PrefKeys.pattern);
   }
 
   Future<bool> setPattern(String pattern) async {
-    final prefs = await _prefsFuture;
-    return prefs.setString(PrefKeys.pattern, pattern);
+    final result = await _databaseConfig.setString(PrefKeys.pattern, pattern);
+    return result != null;
   }
 }

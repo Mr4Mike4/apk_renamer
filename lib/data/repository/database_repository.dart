@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 
+import '../database/config_dao.dart';
 import '../database/pattern_dao.dart';
 
 class DatabaseRepository {
@@ -11,10 +13,10 @@ class DatabaseRepository {
 
   Future<void> init(Directory directory) async {
     _isar = await Isar.open(
-      [PatternDaoSchema],
+      [PatternDaoSchema, ConfigDaoSchema],
       directory: directory.path,
       name: dbName,
-      inspector: false,
+      inspector: kDebugMode,
     );
   }
 

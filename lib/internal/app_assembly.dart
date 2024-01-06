@@ -10,6 +10,7 @@ import 'package:renamer_lib/model/aapt_path_util.dart';
 
 import '../data/model/settings_obj.dart';
 import '../data/rename_isolate/rename_isolate.dart';
+import '../data/repository/database_config_repository.dart';
 import '../data/repository/database_repository.dart';
 import '../data/repository/preferences_repository.dart';
 
@@ -41,7 +42,6 @@ class AppAssembly {
     } else {
       l.Logger.level = l.Level.off;
     }
-    PreferencesRepository.init();
 
     final container = KiwiContainer();
 
@@ -49,8 +49,9 @@ class AppAssembly {
     final db = await _initDatabase(currentDir);
 
     container
-      ..registerSingleton((di) => PreferencesRepository())
       ..registerInstance(db.isar)
+      ..registerSingleton((di) => DatabaseConfigRepository(di.resolve()))
+      ..registerSingleton((di) => PreferencesRepository(di.resolve()))
       ..registerSingleton((di) => RenameIsolate());
 
     final renameIsolate = container.resolve<RenameIsolate>();
