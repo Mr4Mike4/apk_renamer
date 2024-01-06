@@ -15,7 +15,6 @@ import '../data/repository/database_repository.dart';
 import '../data/repository/preferences_repository.dart';
 
 class AppAssembly {
-
   static const _portableFileName = 'portable';
   static const _configDir = 'ApkRenamer';
 
@@ -27,7 +26,7 @@ class AppAssembly {
   static Future<DatabaseRepository> _initDatabase(Directory currentDir) async {
     final isPortable = await checkPortable(currentDir);
     final db = DatabaseRepository();
-    if(isPortable){
+    if (isPortable) {
       await db.init(currentDir);
     } else {
       final dir = await getApplicationSupportDirectory();
@@ -57,9 +56,12 @@ class AppAssembly {
     final renameIsolate = container.resolve<RenameIsolate>();
     final aaptDirPath = AaptPathUtil.getAaptApp(kDebugMode);
     final aaptPath = await AaptUtil.getAaptApp(aaptDirPath);
+    final pref = container.resolve<PreferencesRepository>();
+    final countSuffix = await pref.getCountSuffix();
     if (aaptPath != null) {
-      await renameIsolate.init(SettingsObj(
+      await renameIsolate.init(SettingsObj.init(
         aaptPath: aaptPath,
+        countSuffix: countSuffix,
       ));
     }
   }

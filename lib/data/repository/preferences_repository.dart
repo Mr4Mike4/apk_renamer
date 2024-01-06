@@ -7,12 +7,12 @@ class PreferencesRepository {
 
   final DatabaseConfigRepository _databaseConfig;
 
-  Future<String?> getAaptPath() {
-    return _databaseConfig.getStringOrNull(PrefKeys.aaptPath);
+  Future<String?> getCountSuffix() {
+    return _databaseConfig.getStringOrNull(PrefKeys.countSuffix);
   }
 
-  Future<bool> setAaptPath(String aaptPath) async {
-    final result = await _databaseConfig.setString(PrefKeys.aaptPath, aaptPath);
+  Future<bool> setCountSuffix(String countSuffix) async {
+    final result = await _databaseConfig.setString(PrefKeys.countSuffix, countSuffix);
     return result != null;
   }
 

@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:apk_renamer/internal/localiz.dart';
 import 'package:bloc/bloc.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:parser_apk_info/repository/aapt_util.dart';
+import 'package:renamer_lib/model/keys.dart';
+import 'package:renamer_lib/repository/rename_controller.dart';
 
+import '../../../data/model/settings_obj.dart';
+import '../../../data/rename_isolate/rename_isolate.dart';
 import '../../../data/repository/preferences_repository.dart';
 import '../../../logger.dart';
 
@@ -14,9 +16,8 @@ part 'settings_event.dart';
 part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc(this._pref) : super(const SettingsState.initial()) {
+  SettingsBloc(this._pref, this._renameIsolate) : super(const SettingsState.initial()) {
     on<_LoadSettingsEvent>(_onLoadSettingsEvent);
-    on<_SelectAaptPathSettingsEvent>(_onSelectAaptPathSettingsEvent);
     on<_SaveSettingsEvent>(_onSaveSettingsEvent);
     Localiz.l10n.then((l10n) {
       _S = l10n;
@@ -24,43 +25,32 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   final PreferencesRepository _pref;
+  final RenameIsolate _renameIsolate;
   late final AppLocalizations _S;
 
   FutureOr<void> _onLoadSettingsEvent(
       _LoadSettingsEvent event, Emitter<SettingsState> emit) async {
     logger.d('_LoadSettingsEvent');
-    final aaptPath = await _pref.getAaptPath();
+    final countSuffix = await _pref.getCountSuffix();
     emit.call(SettingsState.load(
-      aaptPath: aaptPath ?? '',
+      countSuffix: countSuffix ?? RenameController.defaultCountSuffix,
     ));
-  }
-
-  FutureOr<void> _onSelectAaptPathSettingsEvent(
-      _SelectAaptPathSettingsEvent event, Emitter<SettingsState> emit) async {
-    logger.d('_SelectAaptPathSettingsEvent');
-    final aaptDirPath = await FilePicker.platform.getDirectoryPath(
-      dialogTitle: _S.settings_select_aapt_path,
-      lockParentWindow: true,
-    );
-    final aaptPath = await AaptUtil.getAaptApp(aaptDirPath);
-    if (aaptPath != null) {
-      logger.d('_SelectAaptPathSettingsEvent >> $aaptPath');
-      emit.call(SettingsState.selectAaptPath(
-        aaptPath: aaptPath,
-      ));
-    } else {
-      logger.d('_SelectAaptPathSettingsEvent >> no select');
-      emit.call(SettingsState.error(
-        error: _S.error_aapt_path,
-      ));
-    }
   }
 
   FutureOr<void> _onSaveSettingsEvent(
       _SaveSettingsEvent event, Emitter<SettingsState> emit) async {
-    final aaptPath = event.aaptPath;
-    logger.d('_SaveSettingsEvent >> $aaptPath');
-    await _pref.setAaptPath(aaptPath);
-    emit.call(const SettingsState.success());
+    final countSuffix = event.countSuffix.trimRight();
+    logger.d('_SaveSettingsEvent >> $countSuffix');
+    if (countSuffix.contains(Keys2.countSuffix)) {
+      await _pref.setCountSuffix(countSuffix);
+      await _renameIsolate.updateSettings(SettingsObj.update(
+        countSuffix: countSuffix,
+      ));
+      emit.call(const SettingsState.success());
+    } else {
+      emit.call(SettingsState.error(
+        error: _S.error_suffix_not_found,
+      ));
+    }
   }
 }

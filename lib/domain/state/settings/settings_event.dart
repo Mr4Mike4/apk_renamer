@@ -7,9 +7,7 @@ part of 'settings_bloc.dart';
 class SettingsEvent with _$SettingsEvent {
   const factory SettingsEvent.load() = _LoadSettingsEvent;
 
-  const factory SettingsEvent.selectAaptPath() = _SelectAaptPathSettingsEvent;
-
   const factory SettingsEvent.save({
-    required String aaptPath,
+    required String countSuffix,
   }) = _SaveSettingsEvent;
 }

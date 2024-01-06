@@ -1,5 +1,13 @@
 class SettingsObj {
-  SettingsObj({required this.aaptPath});
+  SettingsObj.init({
+    required this.aaptPath,
+    required this.countSuffix,
+  });
 
-  final String aaptPath;
+  SettingsObj.update({
+    required this.countSuffix,
+  }): aaptPath = null;
+
+  final String? aaptPath;
+  final String? countSuffix;
 }

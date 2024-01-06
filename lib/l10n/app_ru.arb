@@ -46,11 +46,12 @@
   },
 
   "settings_title": "Настройки",
-  "settings_aapt_path": "Путь к aapt2",
-  "settings_select_aapt_path": "Выберете папку с aapt2",
+  "settings_count_suffix": "Суффикс имени файла",
+  "settings_count_suffix_descr": "Суффикс, который добавляется, когда такое имя уже существует",
+  "settings_count_suffix_one": "Можно добавить только один раз",
 
-  "error_aapt_path": "Выберете корректный путь к aapt2",
   "error_aapt_not_found": "aapt2 не найден",
+  "error_suffix_not_found": "Добавьте суффикс имени файла",
 
   "tag_submenu_date_time": "Дата и время",
   "tag_date_time_full_year": "Год, представленный полными четырьмя или пятью цифрами, в зависимости от используемого календаря.",

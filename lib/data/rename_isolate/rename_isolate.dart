@@ -20,6 +20,7 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
 
   // final aaptPath = await pref.getAaptPath();
   await renameController.aaptInit(info.settings.aaptPath);
+  renameController.countSuffix = info.settings.countSuffix;
 
   receivePort.listen(
         (data) {
@@ -45,9 +46,8 @@ FutureOr<void> _createIsolate(_IsolateInit info) async {
               .then((list) => msg.sendReturnPort.send(list));
           break;
         case SettingsFilesInfo():
-          renameController
-              .aaptInit(msg.settings.aaptPath)
-              .then((res) => msg.sendReturnPort.send(res));
+          renameController.countSuffix = msg.settings.countSuffix;
+          msg.sendReturnPort.send(true);
           break;
       }
     },

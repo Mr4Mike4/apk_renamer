@@ -5,12 +5,8 @@ class SettingsState with _$SettingsState {
   const factory SettingsState.initial() = _InitialSettingsState;
 
   const factory SettingsState.load({
-    required String aaptPath,
+    required String countSuffix,
   }) = _LoadSettingsState;
-
-  const factory SettingsState.selectAaptPath({
-    required String aaptPath,
-  }) = _SelectAaptPathSettingsState;
 
   const factory SettingsState.error({
     required String error,

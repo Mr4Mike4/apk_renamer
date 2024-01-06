@@ -216,15 +216,15 @@ class _ApkListPageState extends State<ApkListPage> {
                   child: Text(S.btn_rename_files),
                 ),
               ),
-              // Align(
-              //   alignment: AlignmentDirectional.bottomStart,
-              //   child: Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: IconButton(
-              //         icon: const Icon(FluentIcons.settings, size: 24.0),
-              //         onPressed: () => context.push('/settings'),
-              //       )),
-              // ),
+              Align(
+                alignment: AlignmentDirectional.bottomStart,
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      icon: const Icon(FluentIcons.settings, size: 24.0),
+                      onPressed: () => context.push('/settings'),
+                    )),
+              ),
             ],
           ),
           right: Column(

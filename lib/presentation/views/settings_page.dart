@@ -3,10 +3,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:renamer_lib/model/keys.dart';
 
 import '../../domain/state/settings/settings_bloc.dart';
 import '../../localizations.dart';
-import 'custom/input_text_field.dart';
+import 'custom/info_label2.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -18,7 +19,9 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   late SettingsBloc _bloc;
 
-  final _aaptPathController = TextEditingController();
+  static const _countSuffix = Keys2.countSuffix;
+
+  final _countSuffixController = TextEditingController();
 
   @override
   void initState() {
@@ -26,18 +29,33 @@ class _SettingsPageState extends State<SettingsPage> {
     final di = KiwiContainer();
     _bloc = SettingsBloc(
       di.resolve(),
-    )
-    ..add(const SettingsEvent.load());
+      di.resolve(),
+    )..add(const SettingsEvent.load());
   }
 
   void _showError(String error) {
     showDialog(
       context: context,
       builder: (_) => ErrorDialog(
-          content: error,
-        ),
-    ).then((result) {
-    });
+        content: error,
+      ),
+    ).then((result) {});
+  }
+
+  void _addCountSuffix() {
+    final value = _countSuffixController.value;
+    final text = value.text;
+    if (!text.contains(_countSuffix)) {
+      final sel = value.selection;
+      final range = TextRange(
+        start: sel.start,
+        end: sel.end,
+      );
+      _countSuffixController.value = value.replaced(range, _countSuffix);
+    } else {
+      final S = AppLocal.of(context);
+      _showError(S.settings_count_suffix_one);
+    }
   }
 
   @override
@@ -59,10 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 context.pop();
               },
               load: (st) {
-                _aaptPathController.text = st.aaptPath;
-              },
-              selectAaptPath: (st) {
-                _aaptPathController.text = st.aaptPath;
+                _countSuffixController.text = st.countSuffix;
               },
               error: (st) {
                 _showError(st.error);
@@ -75,18 +90,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(
-                    width: 600,
-                    child: InputTextField(
-                      labelText: S.settings_aapt_path,
-                      controller: _aaptPathController,
-                      readOnly: true,
-                    ),
+                    width: 300,
+                    child: InfoLabel2(
+                      label: S.settings_count_suffix,
+                      tooltip: S.settings_count_suffix_descr,
+                      child: TextBox(
+                        controller: _countSuffixController,
+                      ),
+                    )
                   ),
-                  Button(
-                    child: Text(S.btn_select),
-                    onPressed: () {
-                      _bloc.add(const SettingsEvent.selectAaptPath());
-                    },
+                  IconButton(
+                    icon: const Icon(FluentIcons.add_to, size: 18.0),
+                    onPressed: _addCountSuffix,
                   ),
                 ],
               ),
@@ -98,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Text(S.btn_save),
                     onPressed: () {
                       _bloc.add(SettingsEvent.save(
-                        aaptPath: _aaptPathController.text,
+                        countSuffix: _countSuffixController.text,
                       ));
                     },
                   ),
