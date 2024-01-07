@@ -6,6 +6,7 @@ class SettingsState with _$SettingsState {
 
   const factory SettingsState.load({
     required String countSuffix,
+    required String version,
   }) = _LoadSettingsState;
 
   const factory SettingsState.error({

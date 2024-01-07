@@ -69,64 +69,75 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       content: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: BlocListener<SettingsBloc, SettingsState>(
+        child: BlocBuilder<SettingsBloc, SettingsState>(
           bloc: _bloc,
-          listener: (context, state) {
-            state.mapOrNull(
+          buildWhen: (previous, current) => current.maybeMap(
               success: (_) {
                 context.pop();
+                return false;
               },
               load: (st) {
                 _countSuffixController.text = st.countSuffix;
+                return true;
               },
               error: (st) {
                 _showError(st.error);
+                return false;
               },
+              orElse: () => false,
+            ),
+          builder: (BuildContext context, SettingsState state) {
+            String version = '';
+            state.mapOrNull(
+              load: (st) {
+                version = st.version;
+              }
+            );
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                        width: 300,
+                        child: InfoLabel2(
+                          label: S.settings_count_suffix,
+                          tooltip: S.settings_count_suffix_descr,
+                          child: TextBox(
+                            controller: _countSuffixController,
+                          ),
+                        )),
+                    IconButton(
+                      icon: const Icon(FluentIcons.add_to, size: 18.0),
+                      onPressed: _addCountSuffix,
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Text(version),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FilledButton(
+                      child: Text(S.btn_save),
+                      onPressed: () {
+                        _bloc.add(SettingsEvent.save(
+                          countSuffix: _countSuffixController.text,
+                        ));
+                      },
+                    ),
+                    Button(
+                      child: Text(S.btn_cancel),
+                      onPressed: () {
+                        context.pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
             );
           },
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: 300,
-                    child: InfoLabel2(
-                      label: S.settings_count_suffix,
-                      tooltip: S.settings_count_suffix_descr,
-                      child: TextBox(
-                        controller: _countSuffixController,
-                      ),
-                    )
-                  ),
-                  IconButton(
-                    icon: const Icon(FluentIcons.add_to, size: 18.0),
-                    onPressed: _addCountSuffix,
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FilledButton(
-                    child: Text(S.btn_save),
-                    onPressed: () {
-                      _bloc.add(SettingsEvent.save(
-                        countSuffix: _countSuffixController.text,
-                      ));
-                    },
-                  ),
-                  Button(
-                    child: Text(S.btn_cancel),
-                    onPressed: () {
-                      context.pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

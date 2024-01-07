@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:apk_renamer/internal/localiz.dart';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:renamer_lib/model/keys.dart';
 import 'package:renamer_lib/repository/rename_controller.dart';
 
@@ -32,8 +33,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       _LoadSettingsEvent event, Emitter<SettingsState> emit) async {
     logger.d('_LoadSettingsEvent');
     final countSuffix = await _pref.getCountSuffix();
+    final packageInfo = await PackageInfo.fromPlatform();
     emit.call(SettingsState.load(
       countSuffix: countSuffix ?? RenameController.defaultCountSuffix,
+      version: 'Version: ${packageInfo.version ?? '-'}',
     ));
   }
 
