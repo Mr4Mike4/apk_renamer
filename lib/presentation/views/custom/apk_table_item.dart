@@ -17,40 +17,41 @@ class ApkTableItem extends StatelessWidget {
   final DelFileInfoCallback? onDelete;
   final ChangedEnableFileInfoCallback? onChangedEnable;
 
+  void _onPressed() {
+    onDelete?.call(fileInfo);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 32,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 32),
       child: Row(
         children: [
-          SizedBox(
+          Container(
             width: 64,
-            child: Center(
-              child: Checkbox(
-                checked: fileInfo.isEnable,
-                onChanged: onChangedEnable != null
-                    ? (bool? checked) => onChangedEnable!(checked, fileInfo)
-                    : null,
-              ),
+            alignment: Alignment.center,
+            child: Checkbox(
+              checked: fileInfo.isEnable,
+              onChanged: onChangedEnable != null
+                  ? (bool? checked) => onChangedEnable!(checked, fileInfo)
+                  : null,
             ),
           ),
           Flexible(
             fit: FlexFit.tight,
             child: Text(fileInfo.currentFileName),
           ),
+          const SizedBox(width: 16),
           Flexible(
             fit: FlexFit.tight,
             child: Text(fileInfo.newFileName ?? ''),
           ),
-          SizedBox(
+          Container(
             width: 64,
-            child: Center(
-              child: IconButton(
-                icon: const Icon(FluentIcons.delete, size: 18.0),
-                onPressed: () {
-                  onDelete?.call(fileInfo);
-                },
-              ),
+            alignment: Alignment.center,
+            child: IconButton(
+              icon: const Icon(FluentIcons.delete, size: 18.0),
+              onPressed: _onPressed,
             ),
           ),
         ],

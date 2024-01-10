@@ -23,9 +23,7 @@ class ApkTableHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const SizedBox(
-            width: 64,
-          ),
+          const SizedBox(width: 64),
           Flexible(
             fit: FlexFit.tight,
             child: Text(
@@ -33,6 +31,7 @@ class ApkTableHeader extends StatelessWidget {
               style: theme.typography.bodyStrong,
             ),
           ),
+          const SizedBox(width: 16),
           Flexible(
             fit: FlexFit.tight,
             child: Text(
@@ -40,9 +39,7 @@ class ApkTableHeader extends StatelessWidget {
               style: theme.typography.bodyStrong,
             ),
           ),
-          const SizedBox(
-            width: 64,
-          ),
+          const SizedBox(width: 64),
         ],
       ),
     );
