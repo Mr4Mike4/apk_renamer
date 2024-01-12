@@ -51,7 +51,7 @@ dependencies:
   renamer_lib:
     path: ../renamer_lib
   parser_apk_info:
-    path: ../parser_apk_info
+    path: ../../parser_apk_info
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
