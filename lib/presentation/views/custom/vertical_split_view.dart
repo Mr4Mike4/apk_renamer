@@ -84,15 +84,18 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
                 width: _widthLeft,
                 child: widget.left,
               ),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onPanUpdate: _dragUpdate,
-                child: SizedBox(
-                  width: _dividerWidth,
-                  height: constraints.maxHeight,
-                  child: const RotationTransition(
-                    turns: AlwaysStoppedAnimation(0.25),
-                    child: Icon(FluentIcons.gripper_bar_horizontal),
+              MouseRegion(
+                cursor: SystemMouseCursors.resizeColumn,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onPanUpdate: _dragUpdate,
+                  child: SizedBox(
+                    width: _dividerWidth,
+                    height: 70,
+                    child: const RotationTransition(
+                      turns: AlwaysStoppedAnimation(0.25),
+                      child: Icon(FluentIcons.gripper_bar_horizontal),
+                    ),
                   ),
                 ),
               ),
