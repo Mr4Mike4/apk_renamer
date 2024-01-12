@@ -1,9 +1,9 @@
 import 'package:apk_renamer/presentation/views/apk_list_page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:system_theme/system_theme.dart';
 
 import '../localizations.dart';
+import '../presentation/styles/theme.dart';
 import '../presentation/views/custom/dialog_page.dart';
 import '../presentation/views/custom/pattern_name_dialog.dart';
 import '../presentation/views/home_page.dart';
@@ -24,13 +24,8 @@ class MyApp extends StatelessWidget {
     // );
     return FluentApp.router(
       title: 'ApkRenamer',
-      theme: FluentThemeData(
-        accentColor: SystemTheme.accentColor.accent.toAccentColor(),
-        visualDensity: VisualDensity.standard,
-        focusTheme: FocusThemeData(
-          glowFactor: is10footScreen(context) ? 2.0 : 0.0,
-        ),
-      ),
+      theme: AppTheme.light(context),
+      darkTheme: AppTheme.dark(context),
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
       routeInformationProvider: _router.routeInformationProvider,
