@@ -1,0 +1,84 @@
+{
+  "@@locale": "en",
+  "app_title": "ApkRenamer",
+  "app_name": "ApkRenamer",
+  "@app_name": {
+    "description": "название приложения"
+  },
+
+  "btn_add_files": "Add Files",
+  "btn_preview": "Preview",
+  "btn_rename_files": "Rename",
+  "btn_yes": "Yes",
+  "btn_save": "Save",
+  "btn_cancel": "Cancel",
+  "btn_select": "Choose",
+  "btn_close": "To close",
+
+  "table_column_name": "The original name",
+  "table_column_new_name": "New name",
+  "file_name_pattern": "Template for the file name",
+  "file_delete_confirm": "Do you really want to remove \"{fileName}\" from the list?",
+  "@file_delete_confirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "app.apk"
+      }
+    }
+  },
+  "dest_folder": "The folder to which the files will be copied",
+  "select_dest_folder": "Select the folder to which the files will be copied",
+  "copy_to_folder": "Copy Files",
+  "app_exit_confirm": "Do you really want to close the app?",
+
+  "menu_save_pattern": "Save the pattern",
+  "menu_my_patterns": "My patterns",
+  "pattern_name": "Template Name",
+  "pattern_delete_confirm": "Do you really want to remove the template \"{patternName}\" from the list?",
+  "@pattern_delete_confirm": {
+    "placeholders": {
+      "patternName": {
+        "type": "String",
+        "example": "app"
+      }
+    }
+  },
+
+  "settings_title": "Settings",
+  "settings_count_suffix": "The suffix of the file name",
+  "settings_count_suffix_descr": "The suffix that is added when such the name already exists",
+  "settings_count_suffix_one": "You can add it only once",
+
+  "error_aapt_not_found": "aapt2 not found",
+  "error_suffix_not_found": "Add a suffix to the file name",
+
+  "tag_submenu_date_time": "Date and time",
+  "tag_date_time_full_year": "Year represented by a full four or five digits, depending on the calendar used.",
+  "tag_date_time_year_last_two_digits": "Year represented only by the last two digits. A leading zero is added for single-digit years.",
+  "tag_date_time_month_name": "Name of the month.",
+  "tag_date_time_month_digit_zero": "Month as digits with leading zeros for single-digit months.",
+  "tag_date_time_month_digit": "Month as digits without leading zeros for single-digit months.",
+  "tag_date_time_day_digit_zero": "Day of the month as digits with leading zeros for single-digit days.",
+  "tag_date_time_day_digit": "Day of the month as digits without leading zeros for single-digit days.",
+  "tag_date_time_hours_zero": "Hours with leading zeros for single-digit hours.",
+  "tag_date_time_minutes_zero": "Minutes with leading zeros for single-digit minutes.",
+  "tag_date_time_minutes": "Minutes without leading zeros for single-digit minutes.",
+  "tag_date_time_seconds_zero": "Seconds with leading zeros for single-digit seconds.",
+  "tag_date_time_seconds": "Seconds without leading zeros for single-digit seconds.",
+  "tag_date_time_milli_seconds_3d": "Milliseconds represented by full three digits.",
+  "tag_date_time_milli_seconds_1d": "Milliseconds represented only by the first digit.",
+
+  "tag_submenu_apk": "APK",
+  "tag_orig_name": "Original name",
+  "tag_apk_application_id": "Application ID",
+  "tag_apk_version_code": "Version code",
+  "tag_apk_version_name": "Version name",
+  "tag_apk_platform_build_version_name": "Platform build version name",
+  "tag_apk_platform_build_version_code": "Platform build version code",
+  "tag_apk_compile_sdk_version": "Compile sdk version",
+  "tag_apk_compile_sdk_version_codename": "Compile sdk version codename",
+  "tag_apk_sdk_version": "SDK version",
+  "tag_apk_target_sdk_version": "Target sdk version",
+  "tag_apk_application_label": "Application label"
+}

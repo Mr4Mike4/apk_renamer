@@ -70,7 +70,7 @@
   "tag_date_time_milli_seconds_1d": "Миллисекунды, представленные только первой цифрой.",
 
   "tag_submenu_apk": "APK",
-  "tag_orig_name": "Имя",
+  "tag_orig_name": "Оригинальное имя",
   "tag_apk_application_id": "Идентификатор приложения",
   "tag_apk_version_code": "Код версии",
   "tag_apk_version_name": "Имя версии",

@@ -1,5 +1,5 @@
 name: apk_renamer_cli
-description: A sample command-line application.
+description: The command-line application for renaming apk files according to a template
 version: 1.0.2
 # repository: https://github.com/my_org/my_repo
 

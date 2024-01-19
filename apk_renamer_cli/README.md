@@ -1,2 +1,3 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+# ApkRenamer command-line
+
+The application for renaming apk files according to a template

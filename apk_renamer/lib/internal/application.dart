@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
       routeInformationProvider: _router.routeInformationProvider,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('ru'),
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.ltr,
