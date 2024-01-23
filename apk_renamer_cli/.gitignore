@@ -55,3 +55,4 @@ config.json
 
 /bin/*.exe
 /bin/*.json
+/bin/apk_renamer_cli
