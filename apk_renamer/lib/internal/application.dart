@@ -2,12 +2,12 @@ import 'package:apk_renamer/presentation/views/apk_list_page.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 
-import '../localizations.dart';
 import '../presentation/styles/theme.dart';
 import '../presentation/views/custom/dialog_page.dart';
 import '../presentation/views/custom/pattern_name_dialog.dart';
 import '../presentation/views/home_page.dart';
 import '../presentation/views/settings_page.dart';
+import 'localiz.dart';
 
 part 'router.dart';
 
@@ -32,6 +32,8 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       builder: (context, child) {
+        final S = AppLocalizations.of(context);
+        Localiz.localeName = S.localeName;
         return Directionality(
           textDirection: TextDirection.ltr,
           child: NavigationPaneTheme(
