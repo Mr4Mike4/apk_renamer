@@ -15,8 +15,6 @@ dependencies:
   args: 2.4.2
   renamer_lib:
     path: ../renamer_lib
-  parser_apk_info:
-    path: ../../parser_apk_info
 
 dev_dependencies:
   lints: ^2.0.0

@@ -15,8 +15,9 @@ dependencies:
   collection: 1.18.0
   freezed_annotation: 2.4.1
   date_format: 2.0.7
-  parser_apk_info:
-    path: ../../parser_apk_info
+#  parser_apk_info:
+#    path: ../../parser_apk_info
+  parser_apk_info: ^1.0.1
 
 dev_dependencies:
 #  flutter_test:
