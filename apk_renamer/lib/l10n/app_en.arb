@@ -6,14 +6,14 @@
     "description": "название приложения"
   },
 
-  "btn_add_files": "Add Files",
+  "btn_add_files": "Add files",
   "btn_preview": "Preview",
   "btn_rename_files": "Rename",
   "btn_yes": "Yes",
   "btn_save": "Save",
   "btn_cancel": "Cancel",
-  "btn_select": "Choose",
-  "btn_close": "To close",
+  "btn_select": "Select",
+  "btn_close": "Close",
 
   "table_column_name": "Original name",
   "table_column_new_name": "New name",
@@ -29,12 +29,12 @@
   },
   "dest_folder": "The folder to which the files will be copied",
   "select_dest_folder": "Select the folder to which the files will be copied",
-  "copy_to_folder": "Copy Files",
+  "copy_to_folder": "Copy files",
   "app_exit_confirm": "Do you really want to close the app?",
 
   "menu_save_template": "Save the template",
   "menu_my_templates": "My template",
-  "template_name": "Template Name",
+  "template_name": "Template name",
   "template_delete_confirm": "Do you really want to remove the template \"{templateName}\" from the list?",
   "@template_delete_confirm": {
     "placeholders": {
