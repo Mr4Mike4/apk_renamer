@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../localizations.dart';
 import 'input_text_field.dart';
 
-class PatternNameDialog extends StatelessWidget {
-  PatternNameDialog({
+class TemplateNameDialog extends StatelessWidget {
+  TemplateNameDialog({
     super.key,
   });
 
@@ -18,7 +18,7 @@ class PatternNameDialog extends StatelessWidget {
       content: SizedBox(
         height: 70,
         child: InputTextField(
-          labelText: S.pattern_name,
+          labelText: S.template_name,
           controller: _controller,
         ),
       ),

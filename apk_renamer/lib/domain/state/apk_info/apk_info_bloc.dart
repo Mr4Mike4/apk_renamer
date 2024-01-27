@@ -53,11 +53,11 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
     }
     final destPath = await _pref.getDestPath();
     final copyToFolder = await _pref.getCopyToFolder();
-    final pattern = await _pref.getPattern();
+    final template = await _pref.getTemplate();
     emit.call(ApkInfoState.load(
       destPath: destPath,
       copyToFolder: copyToFolder,
-      pattern: pattern,
+      template: template,
     ));
   }
 
@@ -95,13 +95,13 @@ class ApkInfoBloc extends Bloc<ApkInfoEvent, ApkInfoState> {
 
   FutureOr<void> _onUpdateFilesInfoEvent(
       _UpdateFilesInfoEvent event, Emitter<ApkInfoState> emit) async {
-    final pattern = event.replacePattern;
-    logger.d('_UpdateFilesInfoEvent pattern >> $pattern');
+    final template = event.replaceTemplate;
+    logger.d('_UpdateFilesInfoEvent template >> $template');
     emit.call(const ApkInfoState.showProgress());
-    await _pref.setPattern(pattern);
+    await _pref.setTemplate(template);
     final list = _listInfo;
     if (list.isNotEmpty) {
-      final listInfo = await _renameIsolate.createNewName(pattern, list);
+      final listInfo = await _renameIsolate.createNewName(template, list);
       if (listInfo != null) {
         _listInfo.clear();
         _listInfo.addAll(listInfo);

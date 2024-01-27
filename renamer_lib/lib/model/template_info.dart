@@ -1,15 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'pattern_info.freezed.dart';
+part 'template_info.freezed.dart';
 
 @Freezed(
   map: FreezedMapOptions.none,
   when: FreezedWhenOptions.none,
 )
-class PatternInfo with _$PatternInfo {
-  const factory PatternInfo({
+class TemplateInfo with _$TemplateInfo {
+  const factory TemplateInfo({
     String? all,
     String? tag,
     String? key,
-  }) = PatternInfoObj;
+  }) = TemplateInfoObj;
 }

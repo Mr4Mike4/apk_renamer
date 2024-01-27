@@ -17,7 +17,7 @@
 
   "table_column_name": "Исходное имя",
   "table_column_new_name": "Новое имя",
-  "file_name_pattern": "Шаблон для имени файла",
+  "file_name_template": "Шаблон для имени файла",
   "file_delete_confirm": "Вы действительно хотите удалить \"{fileName}\" из списка?",
   "@file_delete_confirm": {
     "placeholders": {
@@ -32,13 +32,13 @@
   "copy_to_folder": "Скопировать файлы",
   "app_exit_confirm": "Вы действительно хотите закрыть приложение?",
 
-  "menu_save_pattern": "Сохранить шаблон",
-  "menu_my_patterns": "Mои шаблоны",
-  "pattern_name": "Название шаблона",
-  "pattern_delete_confirm": "Вы действительно хотите удалить шаблон \"{patternName}\" из списка?",
-  "@pattern_delete_confirm": {
+  "menu_save_template": "Сохранить шаблон",
+  "menu_my_templates": "Mои шаблоны",
+  "template_name": "Название шаблона",
+  "template_delete_confirm": "Вы действительно хотите удалить шаблон \"{templateName}\" из списка?",
+  "@template_delete_confirm": {
     "placeholders": {
-      "patternName": {
+      "templateName": {
         "type": "String",
         "example": "app"
       }

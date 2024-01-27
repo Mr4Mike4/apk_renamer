@@ -10,7 +10,7 @@ class ApkInfoEvent with _$ApkInfoEvent {
   const factory ApkInfoEvent.openFiles() = _OpenFilesApkInfoEvent;
 
   const factory ApkInfoEvent.updateFilesInfo({
-    required String replacePattern,
+    required String replaceTemplate,
   }) = _UpdateFilesInfoEvent;
 
   const factory ApkInfoEvent.deleteFilesInfo({

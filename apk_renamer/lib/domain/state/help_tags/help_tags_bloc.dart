@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:apk_renamer/data/database/pattern_dao.dart';
+import 'package:apk_renamer/data/database/template_dao.dart';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../../../internal/localiz.dart';
-import '../../model/pattern_info.dart';
 import '../../model/tag_info.dart';
+import '../../model/template_info.dart';
 import 'help_tags.dart';
 
 part 'help_tags_bloc.freezed.dart';
@@ -17,7 +17,7 @@ part 'help_tags_state.dart';
 class HelpTagsBloc extends Bloc<HelpTagsEvent, HelpTagsState> {
   HelpTagsBloc(this._isar) : super(const HelpTagsState.initial()) {
     on<_StartedHelpTagsEvent>(_onStartedHelpTagsEvent);
-    on<_SavePatternHelpTagsEvent>(_onSavePatternHelpTagsEvent);
+    on<_SaveTemplateHelpTagsEvent>(_onSaveTemplateHelpTagsEvent);
     on<_DeleteHelpTagsEvent>(_onDeleteHelpTagsEvent);
     Localiz.l10n.then((l10n) {
       _S = l10n;
@@ -28,58 +28,58 @@ class HelpTagsBloc extends Bloc<HelpTagsEvent, HelpTagsState> {
   final Isar _isar;
   final HelpTags _helpTags = HelpTags();
 
-  Future<List<PatternInfo>> _loadPattern() async {
-    final patternDaos = await _isar.patternDaos
+  Future<List<TemplateInfo>> _loadTemplate() async {
+    final templateDaos = await _isar.templateDaos
         .where()
         .sortByName()
         .findAll();
-    final myPatterns = patternDaos
+    final myTemplates = templateDaos
         .map((e) => e.toModel())
         .toList(growable: false);
-    return myPatterns;
+    return myTemplates;
   }
 
   FutureOr<void> _onStartedHelpTagsEvent(
       _StartedHelpTagsEvent event, Emitter<HelpTagsState> emit) async {
     _helpTags.init(_S);
-    final myPatterns = await _loadPattern();
+    final myTemplates = await _loadTemplate();
     emit.call(HelpTagsState.load(
       dateTimeHelp: _helpTags.dateTimeHelp,
       apkHelp: _helpTags.apkHelp,
-      myPatterns: myPatterns,
+      myTemplates: myTemplates,
     ));
   }
 
-  Future<void> _updatePatterns(Emitter<HelpTagsState> emit) async {
-    final myPatterns = await _loadPattern();
-    emit.call(HelpTagsState.updatePatterns(
-      myPatterns: myPatterns,
+  Future<void> _updateTemplates(Emitter<HelpTagsState> emit) async {
+    final myTemplates = await _loadTemplate();
+    emit.call(HelpTagsState.updateTemplates(
+      myTemplates: myTemplates,
     ));
   }
 
-  FutureOr<void> _onSavePatternHelpTagsEvent(
-      _SavePatternHelpTagsEvent event, Emitter<HelpTagsState> emit) async {
+  FutureOr<void> _onSaveTemplateHelpTagsEvent(
+      _SaveTemplateHelpTagsEvent event, Emitter<HelpTagsState> emit) async {
     final name = event.name.trim();
-    final patternStr = event.pattern.trim();
-    if (name.isEmpty || patternStr.isEmpty) {
+    final templateStr = event.template.trim();
+    if (name.isEmpty || templateStr.isEmpty) {
       return;
     }
-    final pattern = PatternDao(
+    final template = TemplateDao(
       name: event.name,
-      patternStr: event.pattern,
+      templateStr: event.template,
     );
     await _isar.writeTxn(() async {
-      await _isar.patternDaos.put(pattern);
+      await _isar.templateDaos.put(template);
     });
-    await _updatePatterns(emit);
+    await _updateTemplates(emit);
   }
 
   FutureOr<void> _onDeleteHelpTagsEvent(
       _DeleteHelpTagsEvent event, Emitter<HelpTagsState> emit) async {
     final id = event.id;
     await _isar.writeTxn(() async {
-      await _isar.patternDaos.delete(id);
+      await _isar.templateDaos.delete(id);
     });
-    await _updatePatterns(emit);
+    await _updateTemplates(emit);
   }
 }

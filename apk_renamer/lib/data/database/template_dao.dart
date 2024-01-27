@@ -1,18 +1,18 @@
 import 'package:isar/isar.dart';
 
-part 'pattern_dao.g.dart';
+part 'template_dao.g.dart';
 
 @collection
-@Name("Pattern")
-class PatternDao {
-  PatternDao({
+@Name("Template")
+class TemplateDao {
+  TemplateDao({
     this.id = Isar.autoIncrement,
-    required this.patternStr,
+    required this.templateStr,
     required this.name,
   });
 
   Id id;
   @Index(type: IndexType.value)
   String name;
-  String patternStr;
+  String templateStr;
 }

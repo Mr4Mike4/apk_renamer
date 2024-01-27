@@ -1,8 +1,8 @@
-import 'package:renamer_lib/model/pattern_info.dart';
+import 'package:renamer_lib/model/template_info.dart';
 import 'package:test/expect.dart';
 
-class PatternInfoMatcher extends Matcher {
-  const PatternInfoMatcher({
+class TemplateInfoMatcher extends Matcher {
+  const TemplateInfoMatcher({
     this.all,
     this.tag,
     this.key,
@@ -15,8 +15,8 @@ class PatternInfoMatcher extends Matcher {
   @override
   bool matches(Object? item, Map matchState) {
     if (item.runtimeType != runtimeType &&
-        item is! PatternInfo) return false;
-    final info = item as PatternInfo;
+        item is! TemplateInfo) return false;
+    final info = item as TemplateInfo;
     if (info.all != all) return false;
     if (info.tag != tag) return false;
     if (info.key != key) return false;

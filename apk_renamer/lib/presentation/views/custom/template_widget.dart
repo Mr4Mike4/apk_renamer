@@ -1,32 +1,32 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-import '../../../domain/model/pattern_info.dart';
 import '../../../domain/model/tag_info.dart';
+import '../../../domain/model/template_info.dart';
 import '../../../internal/application.dart';
 import '../../../localizations.dart';
 import 'input_text_field.dart';
-import 'pattern_row.dart';
+import 'template_row.dart';
 import 'text_help_row.dart';
 
-typedef PatternInfoCallback = void Function(PatternInfo info);
+typedef TemplateInfoCallback = void Function(TemplateInfo info);
 
-class PatternWidget extends StatelessWidget {
-  PatternWidget({
+class TemplateWidget extends StatelessWidget {
+  TemplateWidget({
     super.key,
     this.controller,
-    this.onSavePattern,
+    this.onSaveTemplate,
     this.dateTimeHelp,
     this.apkHelp,
-    this.myPatterns,
-    this.onDeletePattern,
+    this.myTemplates,
+    this.onDeleteTemplate,
   });
 
   final TextEditingController? controller;
-  final VoidCallback? onSavePattern;
-  final PatternInfoCallback? onDeletePattern;
+  final VoidCallback? onSaveTemplate;
+  final TemplateInfoCallback? onDeleteTemplate;
   final List<TagInfo>? dateTimeHelp;
   final List<TagInfo>? apkHelp;
-  final List<PatternInfo>? myPatterns;
+  final List<TemplateInfo>? myTemplates;
 
   final _menuController = FlyoutController();
 
@@ -43,8 +43,8 @@ class PatternWidget extends StatelessWidget {
     }
   }
 
-  void _onSelectPattern(PatternInfo info) {
-    controller?.text = info.patternStr;
+  void _onSelectTemplate(TemplateInfo info) {
+    controller?.text = info.templateStr;
   }
 
   void _showMenu() {
@@ -96,20 +96,20 @@ class PatternWidget extends StatelessWidget {
             ),
             const MenuFlyoutSeparator(),
             MenuFlyoutItem(
-              text: Text(S.menu_save_pattern),
+              text: Text(S.menu_save_template),
               onPressed: () {
-                onSavePattern?.call();
+                onSaveTemplate?.call();
                 Flyout.of(context).close;
               },
             ),
             MenuFlyoutSubItem(
-              text: Text(S.menu_my_patterns),
+              text: Text(S.menu_my_templates),
               items: (context) {
-                return myPatterns?.map((item) {
+                return myTemplates?.map((item) {
                       return MenuFlyoutItem(
                         text: SizedBox(
                           width: size.isEmpty ? null : size.width,
-                          child: PatternRow(
+                          child: TemplateRow(
                             info: item,
                           ),
                         ),
@@ -117,13 +117,13 @@ class PatternWidget extends StatelessWidget {
                           icon: const Icon(FluentIcons.delete, size: 18.0),
                           onPressed: () {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              onDeletePattern?.call(item);
+                              onDeleteTemplate?.call(item);
                             });
                             Navigator.of(context).maybePop();
                           },
                         ),
                         onPressed: () {
-                          _onSelectPattern(item);
+                          _onSelectTemplate(item);
                           Flyout.of(context).close;
                         },
                       );
@@ -148,7 +148,7 @@ class PatternWidget extends StatelessWidget {
           Flexible(
             fit: FlexFit.loose,
             child: InputTextField(
-              labelText: S.file_name_pattern,
+              labelText: S.file_name_template,
               controller: controller,
             ),
           ),

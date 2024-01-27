@@ -15,9 +15,9 @@
   "btn_select": "Choose",
   "btn_close": "To close",
 
-  "table_column_name": "The original name",
+  "table_column_name": "Original name",
   "table_column_new_name": "New name",
-  "file_name_pattern": "Template for the file name",
+  "file_name_template": "Template for the file name",
   "file_delete_confirm": "Do you really want to remove \"{fileName}\" from the list?",
   "@file_delete_confirm": {
     "placeholders": {
@@ -32,13 +32,13 @@
   "copy_to_folder": "Copy Files",
   "app_exit_confirm": "Do you really want to close the app?",
 
-  "menu_save_pattern": "Save the pattern",
-  "menu_my_patterns": "My patterns",
-  "pattern_name": "Template Name",
-  "pattern_delete_confirm": "Do you really want to remove the template \"{patternName}\" from the list?",
-  "@pattern_delete_confirm": {
+  "menu_save_template": "Save the template",
+  "menu_my_templates": "My template",
+  "template_name": "Template Name",
+  "template_delete_confirm": "Do you really want to remove the template \"{templateName}\" from the list?",
+  "@template_delete_confirm": {
     "placeholders": {
-      "patternName": {
+      "templateName": {
         "type": "String",
         "example": "app"
       }

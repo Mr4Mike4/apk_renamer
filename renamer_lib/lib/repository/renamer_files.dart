@@ -4,21 +4,21 @@ import 'package:parser_apk_info/repository/apk_util.dart';
 import 'package:path/path.dart' as p;
 
 import '../model/keys.dart';
-import '../model/pattern_info.dart';
+import '../model/template_info.dart';
 
 class RenamerFiles {
 
   RenamerFiles({
-    required this.pattern,
-    required this.patternInfo,
+    required this.template,
+    required this.templateInfo,
   });
 
-  final List<PatternInfo> patternInfo;
-  final String pattern;
+  final List<TemplateInfo> templateInfo;
+  final String template;
   final DateTime _now = DateTime.now();
 
-  String _fromDateFormat(final String newPattern) {
-    return df.formatDate(_now, [newPattern]);
+  String _fromDateFormat(final String newTemplate) {
+    return df.formatDate(_now, [newTemplate]);
   }
 
   String _fromInfo(final String? apkKey, final ApkInfo? apkInfo) {
@@ -59,8 +59,8 @@ class RenamerFiles {
     if (apkInfo == null) {
       return null;
     }
-    String newName = pattern;
-    for (final info in patternInfo) {
+    String newName = template;
+    for (final info in templateInfo) {
       final from = info.all;
       if (from != null) {
         String replace = '';

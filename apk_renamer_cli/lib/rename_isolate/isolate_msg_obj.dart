@@ -13,10 +13,10 @@ class UpdateFilesInfo extends IsolateMsgObj {
 
   UpdateFilesInfo({
     required super.sendReturnPort,
-    required this.pattern,
+    required this.template,
     required this.listInfo,
   });
-  final String pattern;
+  final String template;
   final List<FileInfo> listInfo;
 }
 

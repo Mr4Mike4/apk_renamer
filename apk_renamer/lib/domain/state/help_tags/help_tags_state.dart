@@ -9,9 +9,9 @@ class HelpTagsState with _$HelpTagsState {
   const factory HelpTagsState.load({
     required List<TagInfo>? dateTimeHelp,
     required List<TagInfo>? apkHelp,
-    required List<PatternInfo>? myPatterns,
+    required List<TemplateInfo>? myTemplates,
   }) = _LoadHelpTagsState;
-  const factory HelpTagsState.updatePatterns({
-    required List<PatternInfo>? myPatterns,
-  }) = _UpdatePatternsHelpTagsState;
+  const factory HelpTagsState.updateTemplates({
+    required List<TemplateInfo>? myTemplates,
+  }) = _UpdateTemplatesHelpTagsState;
 }

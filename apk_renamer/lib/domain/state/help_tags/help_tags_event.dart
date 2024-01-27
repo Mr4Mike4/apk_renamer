@@ -6,11 +6,11 @@ part of 'help_tags_bloc.dart';
 )
 class HelpTagsEvent with _$HelpTagsEvent {
   const factory HelpTagsEvent.started() = _StartedHelpTagsEvent;
-  const factory HelpTagsEvent.savePattern({
+  const factory HelpTagsEvent.saveTemplate({
     required String name,
-    required String pattern,
-  }) = _SavePatternHelpTagsEvent;
-  const factory HelpTagsEvent.deletePattern({
+    required String template,
+  }) = _SaveTemplateHelpTagsEvent;
+  const factory HelpTagsEvent.deleteTemplate({
     required int id,
   }) = _DeleteHelpTagsEvent;
 }

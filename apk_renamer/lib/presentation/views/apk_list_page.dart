@@ -5,8 +5,8 @@ import 'package:kiwi/kiwi.dart';
 import 'package:renamer_lib/model/file_info.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../domain/model/pattern_info.dart';
 import '../../domain/model/tag_info.dart';
+import '../../domain/model/template_info.dart';
 import '../../domain/state/apk_info/apk_info_bloc.dart';
 import '../../domain/state/help_tags/help_tags_bloc.dart';
 import '../../localizations.dart';
@@ -15,7 +15,7 @@ import 'custom/checkbox_row.dart';
 import 'custom/confirm_dialog.dart';
 import 'custom/error_dialog.dart';
 import 'custom/input_text_field.dart';
-import 'custom/pattern_widget.dart';
+import 'custom/template_widget.dart';
 import 'custom/vertical_split_view.dart';
 
 class ApkListPage extends StatefulWidget {
@@ -31,13 +31,13 @@ class _ApkListPageState extends State<ApkListPage> {
   late ApkInfoBloc _bloc;
   late HelpTagsBloc _blocHelpTags;
 
-  final _replacePatternController = TextEditingController();
+  final _replaceTemplateController = TextEditingController();
   final _destPathController = TextEditingController();
   final _copyToFolderController = ValueNotifier<bool?>(true);
 
   List<TagInfo>? dateTimeHelp;
   List<TagInfo>? apkHelp;
-  List<PatternInfo>? myPatterns;
+  List<TemplateInfo>? myTemplates;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _ApkListPageState extends State<ApkListPage> {
 
   @override
   void dispose() {
-    _replacePatternController.dispose();
+    _replaceTemplateController.dispose();
     _destPathController.dispose();
     _copyToFolderController.dispose();
     _bloc.close();
@@ -79,18 +79,18 @@ class _ApkListPageState extends State<ApkListPage> {
     });
   }
 
-  void _deletePattern(PatternInfo info) {
+  void _deleteTemplate(TemplateInfo info) {
     final S = AppLocal.of(context);
     showDialog<bool>(
       context: context,
       builder: (_) {
         return ConfirmDialog(
-          content: S.pattern_delete_confirm(info.name),
+          content: S.template_delete_confirm(info.name),
         );
       },
     ).then((result) {
       if (result == true) {
-        _blocHelpTags.add(HelpTagsEvent.deletePattern(
+        _blocHelpTags.add(HelpTagsEvent.deleteTemplate(
           id: info.id,
         ));
       }
@@ -126,12 +126,12 @@ class _ApkListPageState extends State<ApkListPage> {
     ));
   }
 
-  void _onSavePatternDialog() {
-    context.push<String>('/pattern_name').then((patternName) {
-      if (patternName != null) {
-        _blocHelpTags.add(HelpTagsEvent.savePattern(
-          name: patternName,
-          pattern: _replacePatternController.text,
+  void _onSaveTemplateDialog() {
+    context.push<String>('/template_name').then((templateName) {
+      if (templateName != null) {
+        _blocHelpTags.add(HelpTagsEvent.saveTemplate(
+          name: templateName,
+          template: _replaceTemplateController.text,
         ));
       }
     });
@@ -165,19 +165,19 @@ class _ApkListPageState extends State<ApkListPage> {
                     load: (st) {
                       dateTimeHelp = st.dateTimeHelp;
                       apkHelp = st.apkHelp;
-                      myPatterns = st.myPatterns;
+                      myTemplates = st.myTemplates;
                     },
-                    updatePatterns: (st) {
-                      myPatterns = st.myPatterns;
+                    updateTemplates: (st) {
+                      myTemplates = st.myTemplates;
                     },
                   );
-                  return PatternWidget(
-                    controller: _replacePatternController,
-                    onSavePattern: _onSavePatternDialog,
-                    onDeletePattern: _deletePattern,
+                  return TemplateWidget(
+                    controller: _replaceTemplateController,
+                    onSaveTemplate: _onSaveTemplateDialog,
+                    onDeleteTemplate: _deleteTemplate,
                     dateTimeHelp: dateTimeHelp,
                     apkHelp: apkHelp,
-                    myPatterns: myPatterns,
+                    myTemplates: myTemplates,
                   );
                 },
               ),
@@ -195,7 +195,7 @@ class _ApkListPageState extends State<ApkListPage> {
                 child: FilledButton(
                   onPressed: () {
                     _bloc.add(ApkInfoEvent.updateFilesInfo(
-                      replacePattern: _replacePatternController.text,
+                      replaceTemplate: _replaceTemplateController.text,
                     ));
                   },
                   child: Text(S.btn_preview),
@@ -236,7 +236,7 @@ class _ApkListPageState extends State<ApkListPage> {
                     return current.maybeMap(
                       load: (st) {
                         _destPathController.text = st.destPath ?? '';
-                        _replacePatternController.text = st.pattern ?? '';
+                        _replaceTemplateController.text = st.template ?? '';
                         _copyToFolderController.value = st.copyToFolder ?? true;
                         return false;
                       },

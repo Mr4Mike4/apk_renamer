@@ -36,7 +36,7 @@ Future<List<RenameInfo>> createIsolate(SettingsObj settings) async {
       ));
 
   final listFileInfo = await renameController.updateFilesInfo(
-      List.unmodifiable(listInfo), settings.pattern);
+      List.unmodifiable(listInfo), settings.template);
 
   final listRenameFileInfo = await renameController
       .renameFilesInfo(listFileInfo, destPath: settings.outPath);
@@ -54,7 +54,12 @@ Future<List<RenameInfo>> createIsolate(SettingsObj settings) async {
 
 ArgParser buildParser() {
   return ArgParser()
-    ..addOption(ArgKeys.pt, help: 'The file name pattern', valueHelp: 'pattern')
+    ..addOption(
+      ArgKeys.template,
+      abbr: 't',
+      help: 'The file name template',
+      valueHelp: 'template',
+    )
     ..addOption(ArgKeys.file, help: 'The file', valueHelp: 'app.apk')
     ..addOption(ArgKeys.out, help: 'The output path', valueHelp: 'path')
     ..addOption(
@@ -62,10 +67,18 @@ ArgParser buildParser() {
       help: 'The suffix that is added when such a name already exists',
       valueHelp: RenameController.defaultCountSuffix,
     )
-    ..addFlag(ArgKeys.help,
-      help: 'Help', defaultsTo: false, negatable: false,)
-    ..addFlag(ArgKeys.version,
-      help: 'ApkRenamer-cli version', defaultsTo: false, negatable: false,);
+    ..addFlag(
+      ArgKeys.help,
+      help: 'Help',
+      defaultsTo: false,
+      negatable: false,
+    )
+    ..addFlag(
+      ArgKeys.version,
+      help: 'ApkRenamer-cli version',
+      defaultsTo: false,
+      negatable: false,
+    );
 }
 
 void printUsage(ArgParser argParser) {
@@ -104,20 +117,19 @@ Future<void> main(List<String> arguments) async {
       stderr.writeln("error: aapt2 not found!");
       exit(2);
     }
-    final listRenameFileInfo = await Isolate.run(() => createIsolate(SettingsObj(
-      aaptPath: aaptPath,
-      pattern: results[ArgKeys.pt],
-      countSuffix: results[ArgKeys.countSuffix],
-      filePaths: [
-        results[ArgKeys.file],
-      ],
-      outPath: results[ArgKeys.out],
-    )));
+    final listRenameFileInfo =
+        await Isolate.run(() => createIsolate(SettingsObj(
+              aaptPath: aaptPath,
+              template: results[ArgKeys.template],
+              countSuffix: results[ArgKeys.countSuffix],
+              filePaths: [
+                results[ArgKeys.file],
+              ],
+              outPath: results[ArgKeys.out],
+            )));
     listRenameFileInfo.forEach((el) {
       print("${el.oldFileName} ==>>> ${el.newFileName}");
     });
-
-
   } on FormatException catch (e) {
     print(e.message);
     print('');

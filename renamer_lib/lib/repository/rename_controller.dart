@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 
 import '../model/file_info.dart';
 import '../model/keys.dart';
-import 'parser_replace_pattern.dart';
+import 'parser_replace_template.dart';
 import 'renamer_files.dart';
 
 class RenameController {
@@ -16,7 +16,7 @@ class RenameController {
 
   RenameController(this._logger) : _parserApkInfo = ParserApkInfoAapt(_logger);
 
-  final _parserPattern = ParserReplacePattern();
+  final _parserTemplate = ParserReplaceTemplate();
 
   static const defaultCountSuffix = '_(${Keys2.countSuffix})';
 
@@ -47,14 +47,14 @@ class RenameController {
   }
 
   Future<List<FileInfo>> updateFilesInfo(
-      List<FileInfo> listInfo, String pattern) async {
-    _logger.d('updateFilesInfo pattern >> $pattern');
+      List<FileInfo> listInfo, String template) async {
+    _logger.d('updateFilesInfo template >> $template');
     final resultList = <FileInfo>[];
-    if (listInfo.isNotEmpty && pattern.isNotEmpty) {
-      final patternInfo = await _parserPattern.parsePattern(pattern);
+    if (listInfo.isNotEmpty && template.isNotEmpty) {
+      final templateInfo = await _parserTemplate.parseTemplate(template);
       final renamer = RenamerFiles(
-        pattern: pattern,
-        patternInfo: patternInfo,
+        template: template,
+        templateInfo: templateInfo,
       );
       for (int i = 0; i < listInfo.length; i++) {
         final info = listInfo[i];

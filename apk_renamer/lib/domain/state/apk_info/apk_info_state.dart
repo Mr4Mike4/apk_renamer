@@ -10,7 +10,7 @@ class ApkInfoState with _$ApkInfoState {
   const factory ApkInfoState.load({
     required String? destPath,
     required bool? copyToFolder,
-    required String? pattern,
+    required String? template,
   }) = _LoadApkInfoState;
 
   const factory ApkInfoState.loadApkInfo({

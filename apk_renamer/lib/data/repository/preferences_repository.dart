@@ -34,12 +34,12 @@ class PreferencesRepository {
     return result != null;
   }
 
-  Future<String?> getPattern() async {
-    return _databaseConfig.getStringOrNull(PrefKeys.pattern);
+  Future<String?> getTemplate() async {
+    return _databaseConfig.getStringOrNull(PrefKeys.template);
   }
 
-  Future<bool> setPattern(String pattern) async {
-    final result = await _databaseConfig.setString(PrefKeys.pattern, pattern);
+  Future<bool> setTemplate(String template) async {
+    final result = await _databaseConfig.setString(PrefKeys.template, template);
     return result != null;
   }
 }
