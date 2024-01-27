@@ -60,8 +60,18 @@ ArgParser buildParser() {
       help: 'The file name template',
       valueHelp: 'template',
     )
-    ..addOption(ArgKeys.file, help: 'The file', valueHelp: 'app.apk')
-    ..addOption(ArgKeys.out, help: 'The output path', valueHelp: 'path')
+    ..addOption(
+      ArgKeys.file,
+      abbr: 'f',
+      help: 'The file',
+      valueHelp: 'app.apk',
+    )
+    ..addOption(
+      ArgKeys.out,
+      abbr: 'o',
+      help: 'The output path',
+      valueHelp: 'path',
+    )
     ..addOption(
       ArgKeys.countSuffix,
       help: 'The suffix that is added when such a name already exists',
