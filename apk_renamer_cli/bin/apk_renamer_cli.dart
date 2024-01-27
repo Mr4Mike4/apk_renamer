@@ -101,7 +101,7 @@ void _getVersion() {
   print('Version: $version');
 }
 
-Future<void> main(List<String> arguments) async {
+Future<void> main(final List<String>? arguments) async {
   if (kDebugMode) {
     l.Logger.level = l.Level.trace;
   } else {
@@ -109,6 +109,11 @@ Future<void> main(List<String> arguments) async {
   }
 
   final ArgParser argParser = buildParser();
+
+  if(arguments == null || arguments.isEmpty){
+    printUsage(argParser);
+    return;
+  }
   try {
     final results = argParser.parse(arguments);
 
