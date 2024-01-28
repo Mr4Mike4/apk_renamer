@@ -8,12 +8,13 @@ Example:
 apk_renamer_cli.exe --template="${apk.applicationLabel}-${apk.versionName}" --file="%project%\app\build\outputs\apk\prod\release\app.apk" --out="g:\apks"
 ```
 
-![ApkRenamer cli screenshot](../img/apk_renamer_cli.jpg)
+![ApkRenamer cli screenshot](img/apk_renamer_cli.jpg)
 
 ## Build instructions
 
 - Install the [Flutter SDK](https://docs.flutter.dev/get-started/install)
 
+- [Run code generation for renamer_lib.](../renamer_lib/README.md)
 - Run code generation:
 
 ```bash

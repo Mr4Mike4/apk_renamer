@@ -2,14 +2,19 @@
 
 The application for renaming apk files according to a template.
 
-![ApkRenamer screenshot](../img/apk_renamer_light.jpg)
+![ApkRenamer light screenshot](img/apk_renamer_light.jpg)
 
-![ApkRenamer screenshot](../img/apk_renamer_dark.jpg)
+![ApkRenamer dark screenshot](img/apk_renamer_dark.jpg)
+
+## Portable mode
+
+To enable the portable mode in the application, you need to create an empty file named `portable`.
 
 ## Build instructions
 
 - Install the [Flutter SDK](https://docs.flutter.dev/get-started/install)
 
+- [Run code generation for renamer_lib.](../renamer_lib/README.md)
 - Run code generation:
 
 ```bash
@@ -42,4 +47,3 @@ flutter build macos --release
 # for linux
 flutter build linux --release
 ```
-
