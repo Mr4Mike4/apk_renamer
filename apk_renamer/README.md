@@ -2,6 +2,12 @@
 
 The application for renaming apk files according to a template.
 
+Template example:
+
+```text
+${apk.applicationLabel}-${apk.versionName}
+```
+
 ![ApkRenamer light screenshot](img/apk_renamer_light.jpg)
 
 ![ApkRenamer dark screenshot](img/apk_renamer_dark.jpg)
